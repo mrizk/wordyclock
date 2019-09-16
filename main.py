@@ -73,4 +73,4 @@ if __name__ == '__main__':
         #     theaterChaseRainbow(strip)
 
     except KeyboardInterrupt:
-        wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 3, 0, 0), Color(0, 0, 0))
+        wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 11, 0, 0), Color(0, 0, 0))

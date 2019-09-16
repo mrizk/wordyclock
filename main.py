@@ -57,8 +57,8 @@ if __name__ == '__main__':
 
         while True:
             wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 3, 0, 0), Color(255, 0, 0))
-            wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 3, 0, 0), Color(0, 255, 0))
-            wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 3, 0, 0), Color(0, 0, 255))
+            wordClock.colorWipe(wordClock.indeciesFromMatrix(4, 7, 0, 0), Color(0, 255, 0))
+            wordClock.colorWipe(wordClock.indeciesFromMatrix(8, 11, 0, 0), Color(0, 0, 255))
         #     print('Color wipe animations.')
         #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
         #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe

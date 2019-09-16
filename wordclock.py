@@ -36,22 +36,20 @@ class WordClock:
         """returns indecies of a word from the given matrix, assumes matrix (0, 0) is top left"""
         indecies = []
         for y in range(0, self.height):
-            if y < yStart or y > yEnd:
-                continue
+            if y >= yStart and y <= yEnd:
+                yPos = y
 
-            yPos = y
-            if self.origin == constants.ORIGIN_BOTTOM_LEFT or self.origin == constants.ORIGIN_BOTTOM_RIGHT:
-                yPos = self.height - yPos
+                if self.origin == constants.ORIGIN_BOTTOM_LEFT or self.origin == constants.ORIGIN_BOTTOM_RIGHT:
+                    yPos = self.height - yPos
 
-            for x in range(0, self.width):
-                if x < xStart or x > xEnd:
-                    continue
-
-                xPos = x
-                if self.rowsAlternateDirection and y % 2 == 0:
-                    xPos = self.width - xPos
-                
-                indecies.append((yPos * self.width) + xPos)
+                for x in range(0, self.width):
+                    if x >= xStart and x <= xEnd:
+                        xPos = x
+                        
+                        if self.rowsAlternateDirection and y % 2 == 0:
+                            xPos = self.width - xPos
+                        
+                        indecies.append((yPos * self.width) + xPos)
 
         return indecies
 

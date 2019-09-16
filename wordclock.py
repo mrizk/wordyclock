@@ -13,13 +13,12 @@ class LedSetup:
 
 class WordClock:
 
-    def __init__(self, width, height, origin, stripSetup, rowsAlternateDirection = True):
+    def __init__(self, width, height, origin, stripSetup):
         self.width = width
         self.height = height
         self.origin = origin
         self.brightness = stripSetup.brightness
         self.color = Color(255, 0, 0)
-        self.rowsAlternateDirection = rowsAlternateDirection
 
         self.strip = PixelStrip(
             self.width * self.height,
@@ -45,9 +44,13 @@ class WordClock:
                 for x in range(0, self.width):
                     if x >= xStart and x <= xEnd:
                         xPos = x
-                        
-                        if self.rowsAlternateDirection and y % 2 == 0:
-                            xPos = self.width - xPos
+
+                        if self.origin == constants.ORIGIN_TOP_RIGHT or self.origin == constants.ORIGIN_BOTTOM_RIGHT:
+                            if y % 2 == 0:
+                                xPos = (self.width - 1) - xPos
+                        elif self.origin == constants.ORIGIN_TOP_LEFT or self.origin == constants.ORIGIN_BOTTOM_LEFT:
+                            if y % 2 == 1:
+                                xPos = (self.width - 1) - xPos
                         
                         indecies.append((yPos * self.width) + xPos)
 

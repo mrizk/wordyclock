@@ -61,9 +61,9 @@ if __name__ == '__main__':
             r = random.randint(0, 255)
             g = random.randint(0, 255)
             b = random.randint(0, 255)
-            print "r: " + str(r)
-            print "g: " + str(g)
-            print "b: " + str(b)
+            print("r: " + str(r))
+            print("g: " + str(g))
+            print("b: " + str(b))
             wordClock.colorWipe(words.Its, Color(r, g, b))
 
             wordClock.colorWipe(words.HappyBirthDay, Color(r, g, b))

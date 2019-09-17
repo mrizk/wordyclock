@@ -1,4 +1,7 @@
+import signal
+import sys
 import time
+import threading
 import random
 import words
 from wordclock import WordClock
@@ -53,55 +56,59 @@ if __name__ == '__main__':
 
     wordClock = WordClock()
 
+    def signal_handler(signal, frame):
+        print('You pressed Ctrl+C!')
+        wordClock.colorWipe(words.indeciesFromMatrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
     print('Press Ctrl-C to quit.')
 
-    try:
+    # while True:
+    wordClock.colorWipe(words.Its, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        # while True:
-        wordClock.colorWipe(words.Its, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.HappyBirthDay, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.HappyBirthDay, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.FiveM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.TenM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.TwentyM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Minutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.FiveM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.TenM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.TwentyM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Minutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Half, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.AQuarter, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.Half, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.AQuarter, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.To, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Past, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.To, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Past, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.One, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Two, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Three, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Four, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Five, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Six, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Seven, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Eight, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Nine, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Ten, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Eleven, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Noon, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Midnight, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.One, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Two, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Three, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Four, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Five, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Six, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Seven, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Eight, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Nine, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Ten, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Eleven, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Noon, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Midnight, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.Oclock, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.Oclock, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+    wordClock.colorWipe(words.AndXMinutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.AndXMinutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        #     print('Color wipe animations.')
-        #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
-        #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe
-        #     colorWipe(strip, Color(0, 0, 255))  # Green wipe
-        #     print('Theater chase animations.')
-        #     theaterChase(strip, Color(127, 127, 127))  # White theater chase
-        #     theaterChase(strip, Color(127, 0, 0))  # Red theater chase
-        #     theaterChase(strip, Color(0, 0, 127))  # Blue theater chase
-        #     print('Rainbow animations.')
-        #     rainbow(strip)
-        #     rainbowCycle(strip)
-        #     theaterChaseRainbow(strip)
-
-    except KeyboardInterrupt:
-        wordClock.colorWipe(words.indeciesFromMatrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
+    forever = threading.Event()
+    forever.wait()
+    #     print('Color wipe animations.')
+    #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
+    #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe
+    #     colorWipe(strip, Color(0, 0, 255))  # Green wipe
+    #     print('Theater chase animations.')
+    #     theaterChase(strip, Color(127, 127, 127))  # White theater chase
+    #     theaterChase(strip, Color(127, 0, 0))  # Red theater chase
+    #     theaterChase(strip, Color(0, 0, 127))  # Blue theater chase
+    #     print('Rainbow animations.')
+    #     rainbow(strip)
+    #     rainbowCycle(strip)
+    #     theaterChaseRainbow(strip)

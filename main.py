@@ -97,6 +97,8 @@ if __name__ == '__main__':
             wordClock.colorWipe(words.Oclock, Color(r, g, b))
 
             wordClock.colorWipe(words.AndXMinutes, Color(r, g, b))
+
+            time.sleep(10000)
         #     print('Color wipe animations.')
         #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
         #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe

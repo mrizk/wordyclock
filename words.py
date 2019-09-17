@@ -4,7 +4,7 @@ def indeciesFromMatrix(xStart, xEnd, yStart, yEnd=None):
     """returns indecies of a word from the given matrix, assumes matrix (0, 0) is top left"""
     indecies = []
     for y in range(0, constants.CLOCK_HEIGHT):
-        if y >= yStart and (yEnd is not None and y <= yEnd):
+        if y >= yStart and (yEnd is None or y <= yEnd):
             yPos = y
 
             if constants.CLOCK_ORIGIN == constants.ORIGIN_BOTTOM_LEFT or constants.CLOCK_ORIGIN == constants.ORIGIN_BOTTOM_RIGHT:

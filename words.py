@@ -57,4 +57,4 @@ Midnight = indeciesFromMatrix(0, 7, 9)
 
 Oclock = indeciesFromMatrix(6, 11, 11)
 
-AndXMinutes = indeciesFromMatrix(8, 11, 13)
+AndXMinutes = indeciesFromMatrix(8, 11, 12)

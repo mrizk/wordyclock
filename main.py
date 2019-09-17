@@ -50,19 +50,19 @@ from rpi_ws281x import PixelStrip, Color
 #             for i in range(0, strip.numPixels(), 3):
 #                 strip.setPixelColor(i + q, 0)
 
+wordClock = WordClock()
+
+def signal_handler(signal, frame):
+    print('You pressed Ctrl+C!')
+    wordClock.colorWipe(words.indeciesFromMatrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
+print('Press Ctrl-C to quit.')
 
 # Main program logic follows:
 if __name__ == '__main__':
-
-    wordClock = WordClock()
-
-    def signal_handler(signal, frame):
-        print('You pressed Ctrl+C!')
-        wordClock.colorWipe(words.indeciesFromMatrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
-        sys.exit(0)
-
-    signal.signal(signal.SIGINT, signal_handler)
-    print('Press Ctrl-C to quit.')
 
     # while True:
     wordClock.colorWipe(words.Its, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))

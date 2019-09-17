@@ -7,7 +7,7 @@ class WordClock:
 
     def __init__(self):
         self.brightness = 100
-        self.color = Color(255, 0, 0)
+        # self.color = Color(255, 0, 0)
 
         self.strip = PixelStrip(
             constants.CLOCK_WIDTH * constants.CLOCK_HEIGHT,
@@ -21,6 +21,7 @@ class WordClock:
 
     def colorWipe(self, indecies, color, wait_ms=50):
         """Wipe color across display a pixel at a time."""
+        print(indecies)
         for i in indecies:
             self.strip.setPixelColor(i, color)
             self.strip.show()

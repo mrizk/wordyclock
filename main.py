@@ -1,6 +1,9 @@
 import time
+import random
+import words
+import wordclock
+import constants
 from rpi_ws281x import PixelStrip, Color
-from wordclock import *
 
 # def theaterChase(strip, color, wait_ms=50, iterations=10):
 #     """Movie theater light style chaser animation."""
@@ -48,17 +51,45 @@ from wordclock import *
 # Main program logic follows:
 if __name__ == '__main__':
 
-    setup = LedSetup(brightness=50)
-    wordClock = WordClock(12, 12, constants.ORIGIN_TOP_RIGHT, setup)
+    wordClock = WordClock()
 
     print('Press Ctrl-C to quit.')
 
     try:
 
         while True:
-            wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 3, 0, 3), Color(255, 0, 0))
-            wordClock.colorWipe(wordClock.indeciesFromMatrix(2, 5, 2, 5), Color(0, 255, 0))
-            wordClock.colorWipe(wordClock.indeciesFromMatrix(4, 7, 4, 7), Color(0, 0, 255))
+            wordClock.colorWipe(words.Its, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.HappyBirthDay, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.Five, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Ten, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Twenty, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Minutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.Half, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.AQuarter, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.To, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Past, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.One, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Two, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Three, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Four, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Five, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Six, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Seven, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Eight, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Nine, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Ten, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Eleven, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Noon, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            wordClock.colorWipe(words.Midnight, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.Oclock, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+            wordClock.colorWipe(words.AndXMinutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
         #     print('Color wipe animations.')
         #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
         #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe
@@ -73,4 +104,4 @@ if __name__ == '__main__':
         #     theaterChaseRainbow(strip)
 
     except KeyboardInterrupt:
-        wordClock.colorWipe(wordClock.indeciesFromMatrix(0, 11, 0, 11), Color(0, 0, 0))
+        wordClock.colorWipe(wordClock.indeciesFromMatrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))

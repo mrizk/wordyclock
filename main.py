@@ -1,7 +1,7 @@
 import time
 import random
 import words
-import wordclock
+from wordclock import WordClock
 import constants
 from rpi_ws281x import PixelStrip, Color
 

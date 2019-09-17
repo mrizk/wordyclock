@@ -56,12 +56,12 @@ if __name__ == '__main__':
     print('Press Ctrl-C to quit.')
 
     
-    r = random.randint(0, 255)
-    g = random.randint(0, 255)
-    b = random.randint(0, 255)
-    print("r: " + str(r))
-    print("g: " + str(g))
-    print("b: " + str(b))
+    # r = random.randint(0, 255)
+    # g = random.randint(0, 255)
+    # b = random.randint(0, 255)
+    # print("r: " + str(r))
+    # print("g: " + str(g))
+    # print("b: " + str(b))
 
     try:
         while True:

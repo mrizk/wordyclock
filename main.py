@@ -62,9 +62,9 @@ if __name__ == '__main__':
 
         wordClock.colorWipe(words.HappyBirthDay, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-        wordClock.colorWipe(words.Five, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Ten, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-        wordClock.colorWipe(words.Twenty, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        wordClock.colorWipe(words.FiveM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        wordClock.colorWipe(words.TenM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        wordClock.colorWipe(words.TwentyM, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
         wordClock.colorWipe(words.Minutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
         wordClock.colorWipe(words.Half, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))

@@ -30,9 +30,9 @@ Its = indeciesFromMatrix(0, 2, 0)
 
 HappyBirthDay = indeciesFromMatrix(7, 11, 1) + indeciesFromMatrix(7, 11, 5) + indeciesFromMatrix(9, 11, 9)
 
-Five = indeciesFromMatrix(7, 10, 2)
-Ten = indeciesFromMatrix(8, 10, 0)
-Twenty = indeciesFromMatrix(0, 5, 1)
+FiveM = indeciesFromMatrix(7, 10, 2)
+TenM = indeciesFromMatrix(8, 10, 0)
+TwentyM = indeciesFromMatrix(0, 5, 1)
 Minutes = indeciesFromMatrix(0, 6, 3)
 
 Half = indeciesFromMatrix(4, 7, 0)

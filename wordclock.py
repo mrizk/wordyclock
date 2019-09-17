@@ -6,7 +6,7 @@ from rpi_ws281x import PixelStrip, Color
 class WordClock:
 
     def __init__(self):
-        self.brightness = 100
+        self.brightness = 50
         # self.color = Color(255, 0, 0)
 
         self.strip = PixelStrip(

@@ -64,41 +64,40 @@ if __name__ == '__main__':
     print("b: " + str(b))
 
     try:
+        while True:
+            wordClock.colorWipe(words.Its, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.Its, Color(r, g, b))
+            wordClock.colorWipe(words.HappyBirthDay, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.HappyBirthDay, Color(r, g, b))
+            wordClock.colorWipe(words.Five, Color(255, 255, 255))
+            wordClock.colorWipe(words.Ten, Color(255, 255, 255))
+            wordClock.colorWipe(words.Twenty, Color(255, 255, 255))
+            wordClock.colorWipe(words.Minutes, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.Five, Color(r, g, b))
-            wordClock.colorWipe(words.Ten, Color(r, g, b))
-            wordClock.colorWipe(words.Twenty, Color(r, g, b))
-            wordClock.colorWipe(words.Minutes, Color(r, g, b))
+            wordClock.colorWipe(words.Half, Color(255, 255, 255))
+            wordClock.colorWipe(words.AQuarter, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.Half, Color(r, g, b))
-            wordClock.colorWipe(words.AQuarter, Color(r, g, b))
+            wordClock.colorWipe(words.To, Color(255, 255, 255))
+            wordClock.colorWipe(words.Past, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.To, Color(r, g, b))
-            wordClock.colorWipe(words.Past, Color(r, g, b))
+            wordClock.colorWipe(words.One, Color(255, 255, 255))
+            wordClock.colorWipe(words.Two, Color(255, 255, 255))
+            wordClock.colorWipe(words.Three, Color(255, 255, 255))
+            wordClock.colorWipe(words.Four, Color(255, 255, 255))
+            wordClock.colorWipe(words.Five, Color(255, 255, 255))
+            wordClock.colorWipe(words.Six, Color(255, 255, 255))
+            wordClock.colorWipe(words.Seven, Color(255, 255, 255))
+            wordClock.colorWipe(words.Eight, Color(255, 255, 255))
+            wordClock.colorWipe(words.Nine, Color(255, 255, 255))
+            wordClock.colorWipe(words.Ten, Color(255, 255, 255))
+            wordClock.colorWipe(words.Eleven, Color(255, 255, 255))
+            wordClock.colorWipe(words.Noon, Color(255, 255, 255))
+            wordClock.colorWipe(words.Midnight, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.One, Color(r, g, b))
-            wordClock.colorWipe(words.Two, Color(r, g, b))
-            wordClock.colorWipe(words.Three, Color(r, g, b))
-            wordClock.colorWipe(words.Four, Color(r, g, b))
-            wordClock.colorWipe(words.Five, Color(r, g, b))
-            wordClock.colorWipe(words.Six, Color(r, g, b))
-            wordClock.colorWipe(words.Seven, Color(r, g, b))
-            wordClock.colorWipe(words.Eight, Color(r, g, b))
-            wordClock.colorWipe(words.Nine, Color(r, g, b))
-            wordClock.colorWipe(words.Ten, Color(r, g, b))
-            wordClock.colorWipe(words.Eleven, Color(r, g, b))
-            wordClock.colorWipe(words.Noon, Color(r, g, b))
-            wordClock.colorWipe(words.Midnight, Color(r, g, b))
+            wordClock.colorWipe(words.Oclock, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.Oclock, Color(r, g, b))
+            wordClock.colorWipe(words.AndXMinutes, Color(255, 255, 255))
 
-            wordClock.colorWipe(words.AndXMinutes, Color(r, g, b))
-
-            time.sleep(10000)
         #     print('Color wipe animations.')
         #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
         #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe

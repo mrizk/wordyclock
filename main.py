@@ -60,6 +60,8 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 print('Press Ctrl-C to quit.')
+forever = threading.Event()
+forever.wait()
 
 # Main program logic follows:
 if __name__ == '__main__':
@@ -98,8 +100,6 @@ if __name__ == '__main__':
 
     wordClock.colorWipe(words.AndXMinutes, Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
-    forever = threading.Event()
-    forever.wait()
     #     print('Color wipe animations.')
     #     colorWipe(strip, Color(255, 0, 0))  # Red wipe
     #     colorWipe(strip, Color(0, 255, 0))  # Blue wipe

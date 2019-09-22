@@ -47,17 +47,23 @@ class WordClock:
     
     def corner_wipe(self, wait_ms=50):
         index = 0
+        color_index = 255
+        height = constants.CLOCK_HEIGHT - 1
+        width = constants.CLOCK_WIDTH
         while True:
             row_index = index
-            for y in range(0, constants.CLOCK_HEIGHT - 1):
-                for x in range(0, constants.CLOCK_WIDTH):
+            for y in range(0, height):
+                for x in range(0, width):
                     if x <= row_index and x >= row_index - self.corner_wipe_width:
-                        self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], Color(255, 255, 255))
+                        self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], self.wheel(((index * 255) / (width * height)) + color_index) & 255))
                     else:
                         self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], Color(0, 0, 0))
                 row_index -= 1
             self.strip.show()
             index += 1
-            if index == (constants.CLOCK_WIDTH * 2) + 3:
+            color_index -= 1
+            if color_index == 0:
+                color_index = 255
+            if index == (width * height) + 3:
                 index = 0
             time.sleep(wait_ms / 1000.0)

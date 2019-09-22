@@ -38,7 +38,7 @@ class WordClock:
         self.strip.show()
 
     def display_only(self, indecies, color):
-        for i in range(0, constants.CLOCK_HEIGHT * constants.CLOCK_WIDTH + 1):
+        for i in words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1):
             self.strip.setPixelColor(i, Color(0, 0, 0))
         for i in indecies:
             self.strip.setPixelColor(i, color)
@@ -159,4 +159,6 @@ class WordClock:
             self.time_words += words.Eleven
         elif hour_to_show == 12:
             self.time_words += words.Noon
+        
+        print(self.time_words)
         

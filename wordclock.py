@@ -49,7 +49,7 @@ class WordClock:
         index = 0
         while True:
             row_index = index
-            for y in range(0, constants.CLOCK_HEIGHT):
+            for y in range(0, constants.CLOCK_HEIGHT - 1):
                 for x in range(0, constants.CLOCK_WIDTH):
                     if x <= row_index and x >= row_index - self.corner_wipe_width:
                         self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], Color(255, 255, 255))

@@ -47,9 +47,9 @@ class WordClock:
     
     def corner_wipe(self, wait_ms=50):
         index = 0
+        row_index = index
         while True:
             for y in range(0, constants.CLOCK_HEIGHT):
-                row_index = index
                 for x in range(0, constants.CLOCK_WIDTH):
                     if x <= row_index and x >= row_index - self.corner_wipe_width:
                         self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))

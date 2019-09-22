@@ -1,6 +1,6 @@
 import constants
 
-def indeciesFromMatrix(xStart, xEnd, yStart, yEnd=None):
+def indecies_from_matrix(xStart, xEnd, yStart, yEnd=None):
     """returns indecies of a word from the given matrix, assumes matrix (0, 0) is top left"""
     indecies = []
     for y in range(0, constants.CLOCK_HEIGHT):
@@ -26,35 +26,35 @@ def indeciesFromMatrix(xStart, xEnd, yStart, yEnd=None):
     return indecies
     
 
-Its = indeciesFromMatrix(0, 2, 0)
+Its = indecies_from_matrix(0, 2, 0)
 
-HappyBirthDay = indeciesFromMatrix(7, 11, 1) + indeciesFromMatrix(7, 11, 5) + indeciesFromMatrix(9, 11, 9)
+HappyBirthDay = indecies_from_matrix(7, 11, 1) + indecies_from_matrix(7, 11, 5) + indecies_from_matrix(9, 11, 9)
 
-FiveM = indeciesFromMatrix(7, 10, 2)
-TenM = indeciesFromMatrix(8, 10, 0)
-TwentyM = indeciesFromMatrix(0, 5, 1)
-Minutes = indeciesFromMatrix(0, 6, 3)
+FiveM = indecies_from_matrix(7, 10, 2)
+TenM = indecies_from_matrix(8, 10, 0)
+TwentyM = indecies_from_matrix(0, 5, 1)
+Minutes = indecies_from_matrix(0, 6, 3)
 
-Half = indeciesFromMatrix(4, 7, 0)
-AQuarter = indeciesFromMatrix(6, 6, 1) + indeciesFromMatrix(0, 6, 2)
+Half = indecies_from_matrix(4, 7, 0)
+AQuarter = indecies_from_matrix(6, 6, 1) + indecies_from_matrix(0, 6, 2)
 
-To = indeciesFromMatrix(8, 9, 3)
-Past = indeciesFromMatrix(0, 3, 4)
+To = indecies_from_matrix(8, 9, 3)
+Past = indecies_from_matrix(0, 3, 4)
 
-One = indeciesFromMatrix(5, 7, 4)
-Two = indeciesFromMatrix(8, 10, 4)
-Three = indeciesFromMatrix(1, 5, 5)
-Four = indeciesFromMatrix(4, 7, 6)
-Five = indeciesFromMatrix(8, 11, 6)
-Six = indeciesFromMatrix(0, 2, 7)
-Seven = indeciesFromMatrix(3, 7, 7)
-Eight = indeciesFromMatrix(0, 4, 8)
-Nine = indeciesFromMatrix(8, 11, 7)
-Ten = indeciesFromMatrix(1, 3, 10)
-Eleven = indeciesFromMatrix(5, 10, 8)
-Noon = indeciesFromMatrix(0, 3, 6)
-Midnight = indeciesFromMatrix(0, 7, 9)
+One = indecies_from_matrix(5, 7, 4)
+Two = indecies_from_matrix(8, 10, 4)
+Three = indecies_from_matrix(1, 5, 5)
+Four = indecies_from_matrix(4, 7, 6)
+Five = indecies_from_matrix(8, 11, 6)
+Six = indecies_from_matrix(0, 2, 7)
+Seven = indecies_from_matrix(3, 7, 7)
+Eight = indecies_from_matrix(0, 4, 8)
+Nine = indecies_from_matrix(8, 11, 7)
+Ten = indecies_from_matrix(1, 3, 10)
+Eleven = indecies_from_matrix(5, 10, 8)
+Noon = indecies_from_matrix(0, 3, 6)
+Midnight = indecies_from_matrix(0, 7, 9)
 
-Oclock = indeciesFromMatrix(6, 11, 11)
+Oclock = indecies_from_matrix(6, 11, 11)
 
-AndXMinutes = indeciesFromMatrix(8, 11, 12)
+AndXMinutes = indecies_from_matrix(8, 11, 12)

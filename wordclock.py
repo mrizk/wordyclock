@@ -8,6 +8,7 @@ class WordClock:
     def __init__(self):
         self.brightness = 50
         # self.color = Color(255, 0, 0)
+        self.corner_wipe_width = 3
 
         self.strip = PixelStrip(
             constants.CLOCK_WIDTH * constants.CLOCK_HEIGHT,
@@ -19,13 +20,19 @@ class WordClock:
             constants.LED_CHANNEL )
         self.strip.begin()
 
-    def colorWipe(self, indecies, color, wait_ms=50):
+    def wipe(self, indecies, color, wait_ms=50):
         """Wipe color across display a pixel at a time."""
-        print(indecies)
         for i in indecies:
             self.strip.setPixelColor(i, color)
             self.strip.show()
             time.sleep(wait_ms / 1000.0)
+
+    def display(self, indecies, color):
+        """Wipe color across display a pixel at a time."""
+        for i in indecies:
+            self.strip.setPixelColor(i, color)
+        self.strip.show()
+
 
     def wheel(self, pos):
         """Generate rainbow colors across 0-255 positions."""
@@ -38,5 +45,12 @@ class WordClock:
             pos -= 170
             return Color(0, pos * 3, 255 - pos * 3)
     
-    def display(self, matrix, color):
-        pass
+    def corner_wipe(self, wait_ms=50):
+        wipe_index = 0
+        for y in range(0, constants.CLOCK_HEIGHT):
+            for x in range(0, constants.CLOCK_WIDTH):
+                if y <= wipe_index and x <= wipe_index and y >= wipe_index - self.corner_wipe_width and x >= wipe_index - self.corner_wipe_width:
+                    self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))
+                else:
+                    self.display(words.indecies_from_matrix(x, x, y, y), Color(0, 0, 0))
+                time.sleep(wait_ms / 1000.0)

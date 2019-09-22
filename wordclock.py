@@ -97,70 +97,70 @@ class WordClock:
         if self.time_words is not None:
             del self.time_words[:]
 
-        self.time_words = words.Its
+        self.time_words = list(words.Its)
 
         if now.minute <= 4 and now.hour != 0 and now.hour != 12:
-            self.time_words += words.Oclock
+            self.time_words += list(words.Oclock)
 
         elif (now.minute >= 5 and now.minute < 10) or (now.minute >= 55 and now.minute < 60):
-            self.time_words += words.FiveM + words.Minutes
+            self.time_words += list(words.FiveM) + list(words.Minutes)
 
         elif (now.minute >= 10 and now.minute < 15) or (now.minute >= 50 and now.minute < 55):
-            self.time_words += words.TenM + words.Minutes
+            self.time_words += list(words.TenM) + list(words.Minutes)
 
         elif (now.minute >= 15 and now.minute < 20) or (now.minute >= 45 and now.minute < 50):
-            self.time_words += words.AQuarter
+            self.time_words += list(words.AQuarter)
 
         elif (now.minute >= 20 and now.minute < 25) or (now.minute >= 40 and now.minute < 45):
-            self.time_words += words.TwentyM + words.Minutes
+            self.time_words += list(words.TwentyM) + list(words.Minutes)
 
         elif (now.minute >= 25 and now.minute < 30) or (now.minute >= 35 and now.minute < 40):
-            self.time_words += words.TwentyM + words.FiveM + words.Minutes
+            self.time_words += list(words.TwentyM) + list(words.FiveM) + list(words.Minutes)
 
         elif now.minute >= 30 and now.minute < 35:
-            self.time_words += words.Half
+            self.time_words += list(words.Half)
         
         for i in range(now.minute % 5):
-            self.time_words += [ words.AndXMinutes[i] ]
+            self.time_words += list([ words.AndXMinutes[i] ])
 
         hour_to_show = now.hour
         if now.minute > 4:
             if now.minute <= 34:
-                self.time_words += words.Past
+                self.time_words += list(words.Past)
                 hour_to_show = now.hour
             else:
-                self.time_words += words.To
+                self.time_words += list(words.To)
                 hour_to_show = now.hour + 1
         
         if hour_to_show != 12:
             hour_to_show = hour_to_show % 12
         
         if hour_to_show == 0:
-            self.time_words += words.Midnight
+            self.time_words += list(words.Midnight)
         elif hour_to_show == 1:
-            self.time_words += words.One
+            self.time_words += list(words.One)
         elif hour_to_show == 2:
-            self.time_words += words.Two
+            self.time_words += list(words.Two)
         elif hour_to_show == 3:
-            self.time_words += words.Three
+            self.time_words += list(words.Three)
         elif hour_to_show == 4:
-            self.time_words += words.Four
+            self.time_words += list(words.Four)
         elif hour_to_show == 5:
-            self.time_words += words.Five
+            self.time_words += list(words.Five)
         elif hour_to_show == 6:
-            self.time_words += words.Six
+            self.time_words += list(words.Six)
         elif hour_to_show == 7:
-            self.time_words += words.Seven
+            self.time_words += list(words.Seven)
         elif hour_to_show == 8:
-            self.time_words += words.Eight
+            self.time_words += list(words.Eight)
         elif hour_to_show == 9:
-            self.time_words += words.Nine
+            self.time_words += list(words.Nine)
         elif hour_to_show == 10:
-            self.time_words += words.Ten
+            self.time_words += list(words.Ten)
         elif hour_to_show == 11:
-            self.time_words += words.Eleven
+            self.time_words += list(words.Eleven)
         elif hour_to_show == 12:
-            self.time_words += words.Noon
+            self.time_words += list(words.Noon)
         
         print(self.time_words)
         

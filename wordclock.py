@@ -53,4 +53,6 @@ class WordClock:
                     self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))
                 else:
                     self.display(words.indecies_from_matrix(x, x, y, y), Color(0, 0, 0))
+                    
+                wipe_index += 1
                 time.sleep(wait_ms / 1000.0)

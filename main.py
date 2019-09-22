@@ -15,9 +15,11 @@ if __name__ == '__main__':
         wordClock.set_time_words()
         wordClock.corner_wipe(50)
         while True:
-            wordClock.set_time_words()
-            time.sleep(1000 / 1000.0)
             wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
+            wordClock.set_time_words()
+            wordClock.display(wordClock.time_words, Color(255, 255, 255))
+            time.sleep(1000 / 1000.0)
+
 
     except KeyboardInterrupt:
         wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))

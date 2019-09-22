@@ -13,8 +13,8 @@ if __name__ == '__main__':
 
     try:
         while True:
-            sentence = words.Its + words.TenM + words.Minutes + words.To + words.Ten
-            wordClock.corner_wipe(sentence, 50)
+            wordClock.set_time_words()
+            wordClock.corner_wipe(50)
             wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
             time.sleep(100 / 1000.0)
 

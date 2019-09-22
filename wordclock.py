@@ -55,7 +55,7 @@ class WordClock:
             for y in range(0, height):
                 for x in range(0, width):
                     if x <= row_index and x >= row_index - self.corner_wipe_width:
-                        self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], self.wheel(((index * 255) / (width * height)) + color_index) & 255))
+                        self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], self.wheel((((index * 255) / (width * height)) + color_index) & 255))
                     else:
                         self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], Color(0, 0, 0))
                 row_index -= 1

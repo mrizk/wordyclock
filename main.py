@@ -16,4 +16,4 @@ if __name__ == '__main__':
             wordClock.corner_wipe(10)
 
     except KeyboardInterrupt:
-        wordClock.wipe(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
+        wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))

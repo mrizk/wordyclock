@@ -52,9 +52,10 @@ class WordClock:
             for y in range(0, constants.CLOCK_HEIGHT):
                 for x in range(0, constants.CLOCK_WIDTH):
                     if x <= row_index and x >= row_index - self.corner_wipe_width:
-                        self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))
+                        self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], Color(255, 255, 255))
                     else:
-                        self.display(words.indecies_from_matrix(x, x, y, y), Color(0, 0, 0))
+                        self.strip.setPixelColor(words.indecies_from_matrix(x, x, y, y)[0], Color(0, 0, 0))
                 row_index -= 1
+            self.strip.show()
             index += 1
             time.sleep(wait_ms / 1000.0)

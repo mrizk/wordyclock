@@ -95,8 +95,8 @@ class WordClock:
         self.past_minute = now.minute
 
         if self.time_words is not None:
-            self.time_words.clear()
-            
+            del self.time_words[:]
+
         self.time_words = words.Its
 
         if now.minute <= 4 and now.hour != 0 and now.hour != 12:

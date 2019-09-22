@@ -110,7 +110,7 @@ class WordClock:
             elif now.minute >= 30 and now.minute < 35:
                 time_words += words.Half
             
-            for i in range(0, now.minute % 5):
+            for i in range(now.minute % 5):
                 time_words += words.AndXMinutes[i]
 
             hour_to_show = now.hour

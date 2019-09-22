@@ -153,3 +153,6 @@ class WordClock:
                 time_words += words.Noon
             
             self.time_words = time_words
+            
+        else:
+            self.clock_updated = False

@@ -38,7 +38,7 @@ class WordClock:
         self.strip.show()
 
     def display_only(self, indecies, color):
-        for i in words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1):
+        for i in range(0, (constants.CLOCK_WIDTH * constants.CLOCK_HEIGHT) + 1):
             self.strip.setPixelColor(i, Color(0, 0, 0))
         for i in indecies:
             self.strip.setPixelColor(i, color)
@@ -88,8 +88,7 @@ class WordClock:
         if now.hour == self.past_hour and now.minute == self.past_minute:
             self.clock_updated = False
             return
-            
-        print(now)
+        
         self.clock_updated = True
         self.past_hour = now.hour
         self.past_minute = now.minute

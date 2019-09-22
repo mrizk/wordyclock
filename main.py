@@ -13,7 +13,10 @@ if __name__ == '__main__':
 
     try:
         while True:
-            wordClock.corner_wipe(50)
+            sentence = words.Its + words.TenM + words.Minutes + words.To + words.Ten
+            wordClock.corner_wipe(sentence, 50)
+            wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
+            time.sleep(100 / 1000.0)
 
     except KeyboardInterrupt:
         wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))

@@ -58,4 +58,6 @@ class WordClock:
                 row_index -= 1
             self.strip.show()
             index += 1
+            if index == constants.CLOCK_WIDTH * 2:
+                index = 0
             time.sleep(wait_ms / 1000.0)

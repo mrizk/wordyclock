@@ -161,5 +161,4 @@ class WordClock:
         elif hour_to_show == 12:
             self.time_words += list(words.Noon)
         
-        print(self.time_words)
         

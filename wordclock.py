@@ -81,6 +81,7 @@ class WordClock:
     def set_time_words(self):
         now = datetime.datetime.now()
         if now.hour != self.past_hour or now.minute != self.past_minute:
+            print(now)
             self.clock_updated = True
             self.past_hour = now.hour
             self.past_minute = now.minute
@@ -153,6 +154,6 @@ class WordClock:
                 time_words += words.Noon
             
             self.time_words = time_words
-            
+
         else:
             self.clock_updated = False

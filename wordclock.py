@@ -58,7 +58,7 @@ class WordClock:
     def corner_wipe(self, wait_ms=50):
         index = 0
         color_index = 255
-        height = constants.CLOCK_HEIGHT - 1
+        height = constants.CLOCK_HEIGHT
         width = constants.CLOCK_WIDTH
         while True:
             row_index = index

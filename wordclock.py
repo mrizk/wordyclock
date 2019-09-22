@@ -46,13 +46,14 @@ class WordClock:
             return Color(0, pos * 3, 255 - pos * 3)
     
     def corner_wipe(self, wait_ms=50):
-        wipe_index = 0
-        for y in range(0, constants.CLOCK_HEIGHT):
-            for x in range(0, constants.CLOCK_WIDTH):
-                if y <= wipe_index and x <= wipe_index and y >= wipe_index - self.corner_wipe_width and x >= wipe_index - self.corner_wipe_width:
-                    self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))
-                else:
-                    self.display(words.indecies_from_matrix(x, x, y, y), Color(0, 0, 0))
-                    
-                wipe_index += 1
-                time.sleep(wait_ms / 1000.0)
+        index = 0
+        while True:
+            for y in range(0, constants.CLOCK_HEIGHT):
+                for x in range(0, constants.CLOCK_WIDTH):
+                    if y <= index and x <= index and y >= index - self.corner_wipe_width and x >= index - self.corner_wipe_width:
+                        self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))
+                    else:
+                        self.display(words.indecies_from_matrix(x, x, y, y), Color(0, 0, 0))
+
+            index += 1
+            time.sleep(wait_ms / 1000.0)

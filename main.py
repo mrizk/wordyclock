@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     try:
         while True:
-            wordClock.corner_wipe(100)
+            wordClock.corner_wipe(50)
 
     except KeyboardInterrupt:
         wordClock.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))

@@ -33,11 +33,16 @@ class WordClock:
             time.sleep(wait_ms / 1000.0)
 
     def display(self, indecies, color):
-        """Wipe color across display a pixel at a time."""
         for i in indecies:
             self.strip.setPixelColor(i, color)
         self.strip.show()
 
+    def display_only(self, indecies, color):
+        for i in range(constants.CLOCK_WIDTH * constants.CLOCK_HEIGHT):
+            self.strip.setPixelColor(i, Color(0, 0, 0))
+        for i in indecies:
+            self.strip.setPixelColor(i, color)
+        self.strip.show()
 
     def wheel(self, pos):
         """Generate rainbow colors across 0-255 positions."""
@@ -85,8 +90,6 @@ class WordClock:
             self.clock_updated = True
             self.past_hour = now.hour
             self.past_minute = now.minute
-
-            self.display(words.indecies_from_matrix(0, constants.CLOCK_WIDTH-1, 0, constants.CLOCK_HEIGHT-1), Color(0, 0, 0))
 
             time_words = words.Its
 

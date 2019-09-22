@@ -2,6 +2,7 @@ import time
 import datetime
 import constants
 import words
+import helper
 from rpi_ws281x import PixelStrip, Color
 
 class WordClock:
@@ -64,7 +65,7 @@ class WordClock:
             row_index = index
             for y in range(0, height):
                 for x in range(0, width):
-                    led_pos = words.indecies_from_matrix(x, x, y, y)[0]
+                    led_pos = helper.indecies_from_matrix(x, x, y, y)[0]
                     if x <= row_index and x > row_index - self.corner_wipe_width:
                         color = self.wheel((((y * 255) / (width)) + color_index) & 255)
                         self.strip.setPixelColor(led_pos, color)

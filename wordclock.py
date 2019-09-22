@@ -49,11 +49,12 @@ class WordClock:
         index = 0
         while True:
             for y in range(0, constants.CLOCK_HEIGHT):
+                row_index = index
                 for x in range(0, constants.CLOCK_WIDTH):
-                    if y <= index and x <= index and y >= index - self.corner_wipe_width and x >= index - self.corner_wipe_width:
+                    if x <= row_index and x >= row_index - self.corner_wipe_width:
                         self.display(words.indecies_from_matrix(x, x, y, y), Color(255, 255, 255))
                     else:
                         self.display(words.indecies_from_matrix(x, x, y, y), Color(0, 0, 0))
-
+                row_index -= 1
             index += 1
             time.sleep(wait_ms / 1000.0)

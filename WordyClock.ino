@@ -136,6 +136,8 @@ bool stripUpdated = false;
 unsigned long delayInterval = 50;
 unsigned long timer;
 
+bool previousEnableState, currentEnableState;
+
 void setup() {
    Serial.begin(9600);
 
@@ -163,8 +165,6 @@ void setup() {
   timer = millis();
 }
 
-bool previousEnableState, currentEnableState;
-
 void loop() {
   GetColorValue();
   GetBrightnessDimmerValue();
@@ -176,14 +176,16 @@ void loop() {
       delay(50);
       currentEnableState = digitalRead(ENABLE);
       if (currentEnableState != previousEnableState) {
-        
         if (currentEnableState) {
           ClearStrip();
           strip.show();
           digitalWrite(LED_POWER, HIGH);
 
-          currentWordsColor = 255;
-          currentBrightness = 100;
+          for (int i = 0; i < numReadings; i++) {
+            GetColorValue();
+            GetBrightnessDimmerValue();
+            delay(5);
+          }
           CornerWipe(3, 40, false);
           
         } else {
@@ -508,7 +510,7 @@ void CornerWipe(int cornerWipeWidth, int wait, bool wipe) {
             }
           } else {
             if (x <= rowIndex - cornerWipeWidth && LEDS[*ledPos]) {
-              strip.setPixelColor(*ledPos, 255, 255, 255);
+              strip.setPixelColor(*ledPos, Wheel(currentWordsColor));
             } else {
               strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
             }

@@ -184,9 +184,11 @@ void loop() {
 
           currentWordsColor = 255;
           currentBrightness = 100;
-          CornerWipe(3, 40);
+          CornerWipe(3, 40, false);
           
         } else {
+          CornerWipe(3, 40, true);
+          
           ClearStrip();
           strip.show();
           digitalWrite(LED_POWER, LOW);
@@ -485,7 +487,7 @@ uint32_t Wheel(byte wheelPos) {
   }
 }
 
-void CornerWipe(int cornerWipeWidth, int wait) {
+void CornerWipe(int cornerWipeWidth, int wait, bool wipe) {
   int index = 0;
   int colorIndex = 255;
   
@@ -500,10 +502,16 @@ void CornerWipe(int cornerWipeWidth, int wait) {
         if (x <= rowIndex && x > rowIndex - cornerWipeWidth) {
             strip.setPixelColor(*ledPos, Wheel((((y * 255) / CLOCK_HEIGHT) + colorIndex) & 255));
         } else {
-          if (x <= rowIndex - cornerWipeWidth && LEDS[*ledPos]) {
-            strip.setPixelColor(*ledPos, 255, 255, 255);
+          if (wipe) {
+            if (x <= rowIndex - cornerWipeWidth) {
+              strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
+            }
           } else {
-            strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
+            if (x <= rowIndex - cornerWipeWidth && LEDS[*ledPos]) {
+              strip.setPixelColor(*ledPos, 255, 255, 255);
+            } else {
+              strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
+            }
           }
         }
       }

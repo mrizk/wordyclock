@@ -1,0 +1,543 @@
+#include <Time.h>
+#include "RTClib.h"
+#include <Rotary.h>
+#include <Adafruit_NeoPixel.h>
+
+#define STRIP         4
+#define N_LEDS      148
+#define DIMMER       A0
+#define COLOR        A1
+#define LED_POWER     7
+#define ENABLE        6
+#define HOUR_PINA     8
+#define HOUR_PINB     9
+#define MINUTE_PINA  10
+#define MINUTE_PINB  11
+
+#define ORIGIN_TOP_LEFT     0
+#define ORIGIN_TOP_RIGHT    1
+#define ORIGIN_BOTTOM_LEFT  2
+#define ORIGIN_BOTTOM_RIGHT 3
+
+#define CLOCK_WIDTH  12
+#define CLOCK_HEIGHT 13
+#define CLOCK_ORIGIN ORIGIN_TOP_RIGHT
+
+bool LEDS[CLOCK_WIDTH * CLOCK_HEIGHT];
+
+const int Its_SIZE = 3;
+int Its[Its_SIZE];
+
+const int Happy_SIZE = 5;
+int Happy[Happy_SIZE];
+const int Birth_SIZE = 5;
+int Birth[Birth_SIZE];
+const int Day_SIZE = 3;
+int Day[Day_SIZE];
+
+const int Anniversary_SIZE = 11;
+int Anniversary[Anniversary_SIZE];
+
+const int FiveMin_SIZE = 4;
+int FiveMin[FiveMin_SIZE];
+const int TenMin_SIZE = 3;
+int TenMin[TenMin_SIZE];
+const int TwentyMin_SIZE = 6;
+int TwentyMin[TwentyMin_SIZE];
+const int Minutes_SIZE = 7;
+int Minutes[Minutes_SIZE];
+
+const int Half_SIZE = 4;
+int Half[Half_SIZE];
+const int A_SIZE = 1;
+int A[A_SIZE];
+const int Quarter_SIZE = 7;
+int Quarter[Quarter_SIZE];
+
+const int To_SIZE = 2;
+int To[To_SIZE];
+const int Past_SIZE = 4;
+int Past[Past_SIZE];
+
+const int One_SIZE = 3;
+int One[One_SIZE];
+const int Two_SIZE = 3;
+int Two[Two_SIZE];
+const int Three_SIZE = 5;
+int Three[Three_SIZE];
+const int Four_SIZE = 4;
+int Four[Four_SIZE];
+const int Five_SIZE = 4;
+int Five[Five_SIZE];
+const int Six_SIZE = 3;
+int Six[Six_SIZE];
+const int Seven_SIZE = 5;
+int Seven[Seven_SIZE];
+const int Eight_SIZE = 5;
+int Eight[Eight_SIZE];
+const int Nine_SIZE = 4;
+int Nine[Nine_SIZE];
+const int Ten_SIZE = 3;
+int Ten[Ten_SIZE];
+const int Eleven_SIZE = 6;
+int Eleven[Eleven_SIZE];
+const int Noon_SIZE = 4;
+int Noon[Noon_SIZE];
+const int Midnight_SIZE = 8;
+int Midnight[Midnight_SIZE];
+
+const int Oclock_SIZE = 6;
+int Oclock[Oclock_SIZE];
+
+const int AndXMinutes_SIZE = 4;
+int AndXMinutes[AndXMinutes_SIZE];
+
+const int numReadings = 30;
+
+int dimmerReadings[numReadings];
+int dimmerReadIndex = 0;
+int dimmerTotal = 0;
+int dimmerAverage = 0;
+int brightnessValue = 0;
+float floatBrightnessValue = 0.0;
+int pastBrightness = 0;
+int currentBrightness = 0;
+
+int colorReadings[numReadings];
+int colorReadIndex = 0;
+int colorTotal = 0;
+int colorAverage = 0;
+int currentWordsColor = 0;
+float floatColorValue = 0.0;
+int pastWordsColor = 0;
+int colorValue = 0;
+
+//int happyBirthDayColor = 255;
+//int slowDownHappyBirthDayRainbowBy = 0;
+//int happyBirthDayColorSlowCounter = 0;
+//int wordColorForRainbow = 255;
+//int slowDownWordRainbowBy = 1;
+//int wordColorForRainbowSlowCounter = 0;
+
+int currentHour, currentMinute;
+int pastHour, pastMinute;
+int hourToShow;
+
+RTC_DS3231 rtc;
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS, STRIP, NEO_GRB + NEO_KHZ800);
+Rotary hourRotary = Rotary(HOUR_PINA, HOUR_PINB);
+Rotary minuteRotary = Rotary(MINUTE_PINA, MINUTE_PINB);
+
+volatile int hourOffset;
+volatile int minuteOffset;
+
+bool stripUpdated = false;
+
+unsigned long delayInterval = 50;
+unsigned long timer;
+
+void setup() {
+   Serial.begin(9600);
+
+  if (! rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+
+  // Serial.print(rtc.getTemperature());
+  
+  SetupWords();
+
+  hourRotary.begin();
+  minuteRotary.begin();
+  strip.begin();
+  
+  PCICR |= (1 << PCIE0);
+  PCMSK0 |= (1 << PCINT4) | (1 << PCINT5) | (1 << PCINT6) | (1 << PCINT7);
+  sei();
+
+  pinMode(ENABLE, INPUT);
+  pinMode(LED_POWER, OUTPUT);
+  
+  timer = millis();
+}
+
+bool previousEnableState, currentEnableState;
+
+void loop() {
+  GetColorValue();
+  GetBrightnessDimmerValue();
+  
+  if (millis() - timer >= delayInterval) {
+
+    currentEnableState = digitalRead(ENABLE);
+    if (currentEnableState != previousEnableState) {
+      delay(50);
+      currentEnableState = digitalRead(ENABLE);
+      if (currentEnableState != previousEnableState) {
+        
+        if (currentEnableState) {
+          ClearStrip();
+          strip.show();
+          digitalWrite(LED_POWER, HIGH);
+
+          currentWordsColor = 255;
+          currentBrightness = 100;
+          CornerWipe(3, 40);
+          
+        } else {
+          ClearStrip();
+          strip.show();
+          digitalWrite(LED_POWER, LOW);
+        }
+        previousEnableState = currentEnableState;
+      }
+    }
+
+    if (hourOffset != 0 || minuteOffset != 0) {
+      UpdateTime();
+    }
+    
+    SetTime(false);
+    
+    if (stripUpdated) {
+      strip.show();
+      stripUpdated = false;
+    }
+
+    timer = millis();
+  }
+}
+
+void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart, int yEnd) {
+  int i = 0;
+  for (int y = 0; y < CLOCK_HEIGHT; y++){
+    if (y >= yStart && y <= yEnd){
+      int yPos = y;
+
+      if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
+        yPos = CLOCK_HEIGHT - yPos;
+      }
+
+      for (int x = 0; x < CLOCK_WIDTH; x++){
+        if (x >= xStart && x <= xEnd){
+          int xPos = x;
+          if ((CLOCK_ORIGIN == ORIGIN_TOP_RIGHT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) && y % 2 == 0){
+            xPos = (CLOCK_WIDTH - 1) - xPos;
+          } else if ((CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT) && y % 2 == 1){
+            xPos = (CLOCK_WIDTH - 1) - xPos;
+          }
+          arr[i] = (yPos * CLOCK_WIDTH) + xPos;
+          i++;
+        }
+      }
+    }
+  }
+}
+
+void SetupWords() {
+  IndeciesFromMatrix(Its,   Its_SIZE,   0, 2, 0, 0);
+  
+  IndeciesFromMatrix(Happy,       Happy_SIZE,       7, 11, 1, 1);
+  IndeciesFromMatrix(Birth,       Birth_SIZE,       7, 11, 5, 5);
+  IndeciesFromMatrix(Day,         Day_SIZE,         9, 11, 9, 9);
+  IndeciesFromMatrix(Anniversary, Anniversary_SIZE, 9, 11, 9, 9);
+
+  IndeciesFromMatrix(FiveMin,   FiveMin_SIZE,   7, 10, 2, 2);
+  IndeciesFromMatrix(TenMin,    TenMin_SIZE,    8, 10, 0, 0);
+  IndeciesFromMatrix(TwentyMin, TwentyMin_SIZE, 0, 5, 1, 1);
+  IndeciesFromMatrix(Minutes,   Minutes_SIZE,   0, 6, 3, 3);
+
+  IndeciesFromMatrix(Half,    Half_SIZE,    4, 7, 0, 0);
+  IndeciesFromMatrix(A,       A_SIZE,       6, 6, 1, 1);
+  IndeciesFromMatrix(Quarter, Quarter_SIZE, 0, 6, 2, 2);
+
+  IndeciesFromMatrix(To,   To_SIZE,   8, 9, 3, 3);
+  IndeciesFromMatrix(Past, Past_SIZE, 0, 3, 4, 4);
+
+  IndeciesFromMatrix(One,      One_SIZE,      5, 7, 4, 4);
+  IndeciesFromMatrix(Two,      Two_SIZE,      8, 10, 4, 4);
+  IndeciesFromMatrix(Three,    Three_SIZE,    1, 5, 5, 5);
+  IndeciesFromMatrix(Four,     Four_SIZE,     4, 7, 6, 6);
+  IndeciesFromMatrix(Five,     Five_SIZE,     8, 11, 6, 6);
+  IndeciesFromMatrix(Six,      Six_SIZE,      0, 2, 7, 7);
+  IndeciesFromMatrix(Seven,    Seven_SIZE,    3, 7, 7, 7);
+  IndeciesFromMatrix(Eight,    Eight_SIZE,    0, 4, 8, 8);
+  IndeciesFromMatrix(Nine,     Nine_SIZE,     8, 11, 7, 7);
+  IndeciesFromMatrix(Ten,      Ten_SIZE,      1, 3, 11, 11);
+  IndeciesFromMatrix(Eleven,   Eleven_SIZE,   5, 10, 8, 8);
+  IndeciesFromMatrix(Noon,     Noon_SIZE,     0, 3, 6, 6);
+  IndeciesFromMatrix(Midnight, Midnight_SIZE, 0, 7, 9, 9);
+
+  IndeciesFromMatrix(Oclock,      Oclock_SIZE,      6, 11, 11, 11);
+  IndeciesFromMatrix(AndXMinutes, AndXMinutes_SIZE, 8, 11, 12, 12);
+}
+
+void ClearStrip() {
+  for (int i = 0; i < N_LEDS; i++) {
+    LEDS[i] = false;
+  }
+  strip.clear();
+}
+
+void UpdateTime() {
+  DateTime now = rtc.now();
+  rtc.adjust(DateTime(now + TimeSpan(0, hourOffset, minuteOffset, -now.second())));
+  hourOffset = 0;
+  minuteOffset = 0;
+}
+
+bool TooDifferent(int a, int b) {
+  if (a > b) {
+    if (a - b > 1) {
+      return true;
+    }
+    return false;
+  }
+  if (b - a > 1) {
+    return true;
+  }
+  return false;
+}
+
+void SetTime(bool force){
+  DateTime now = rtc.now();
+  currentHour = now.hour();
+  currentMinute = now.minute();
+  
+  if (force || currentHour != pastHour || currentMinute != pastMinute || TooDifferent(currentWordsColor, pastWordsColor) || TooDifferent(currentBrightness, pastBrightness)){
+    stripUpdated = true;
+    
+    pastHour = currentHour;
+    pastMinute = currentMinute;
+    pastWordsColor = currentWordsColor;
+    pastBrightness = currentBrightness;
+
+    strip.setBrightness(currentBrightness);
+    
+    ClearStrip();
+    
+    TurnOn(Its, Its_SIZE);
+    
+    if (currentMinute <= 4) {
+      if (currentHour != 0 && currentHour != 12)
+        TurnOn(Oclock, Oclock_SIZE);
+    }
+    else if ((currentMinute >= 5 && currentMinute < 10) || (currentMinute >= 55 && currentMinute < 60)) {
+      TurnOn(FiveMin, FiveMin_SIZE);
+      TurnOn(Minutes, Minutes_SIZE);
+    }
+    else if ((currentMinute >= 10 && currentMinute < 15) || (currentMinute >= 50 && currentMinute < 55)) {
+      TurnOn(TenMin, TenMin_SIZE);
+      TurnOn(Minutes, Minutes_SIZE);
+    }
+    else if ((currentMinute >= 15 && currentMinute < 20) || (currentMinute >= 45 && currentMinute < 50)) {
+      TurnOn(A, A_SIZE);
+      TurnOn(Quarter, Quarter_SIZE);
+    }
+    else if ((currentMinute >= 20 && currentMinute < 25) || (currentMinute >= 40 && currentMinute < 45)) {
+      TurnOn(TwentyMin, TwentyMin_SIZE);
+      TurnOn(Minutes, Minutes_SIZE);
+    }
+    else if ((currentMinute >= 25 && currentMinute < 30) || (currentMinute >= 35 && currentMinute < 40)) {
+      TurnOn(TwentyMin, TwentyMin_SIZE);
+      TurnOn(FiveMin, FiveMin_SIZE);
+      TurnOn(Minutes, Minutes_SIZE);
+    }
+    else if (currentMinute >= 30 && currentMinute < 35) {
+      TurnOn(Half, Half_SIZE);
+    }
+    
+    for (int i = 0; i < (currentMinute % 5); i++){
+      int* ptr_minute = &AndXMinutes[i];
+      TurnOn(ptr_minute, 1);
+    }
+    
+    if (currentMinute > 4) {
+      if (currentMinute <= 34) {
+        TurnOn(Past, Past_SIZE);
+        hourToShow = currentHour;
+      }
+      else {
+        TurnOn(To, To_SIZE);
+        hourToShow = currentHour + 1;
+      }
+    }
+    else {
+      hourToShow = currentHour;
+    }
+    
+    if (hourToShow != 12)
+      hourToShow = hourToShow % 12;
+    
+    switch(hourToShow) {
+      case 0:
+        TurnOn(Midnight, Midnight_SIZE);
+        break;
+      case 1:
+        TurnOn(One, One_SIZE);
+        break;
+      case 2:
+        TurnOn(Two, Two_SIZE);
+        break;
+      case 3:
+        TurnOn(Three, Three_SIZE);
+        break;
+      case 4:
+        TurnOn(Four, Four_SIZE);
+        break;
+      case 5:
+        TurnOn(Five, Five_SIZE);
+        break;
+      case 6:
+        TurnOn(Six, Six_SIZE);
+        break;
+      case 7:
+        TurnOn(Seven, Seven_SIZE);
+        break;
+      case 8:
+        TurnOn(Eight, Eight_SIZE);
+        break;
+      case 9:
+        TurnOn(Nine, Nine_SIZE);
+        break;
+      case 10:
+        TurnOn(Ten, Ten_SIZE);
+        break;
+      case 11:
+        TurnOn(Eleven, Eleven_SIZE);
+        break;
+      case 12:
+        TurnOn(Noon, Noon_SIZE);
+        break;
+    }
+  }
+}
+
+void TurnOn(int* wordArray, int wordArray_SIZE) {
+  if (currentWordsColor >= 254) {
+    for(int i = 0; i < wordArray_SIZE; i++) {
+      strip.setPixelColor(wordArray[i], 255, 255, 255);
+      LEDS[wordArray[i]] = true;
+    }
+  } else {
+    for(int i = 0; i < wordArray_SIZE; i++) {
+      strip.setPixelColor(wordArray[i], Wheel(((i * 256) + currentWordsColor) & 255));
+      LEDS[wordArray[i]] = true;
+    }
+  }
+}
+
+void GetBrightnessDimmerValue() {
+  dimmerTotal = dimmerTotal - dimmerReadings[dimmerReadIndex];
+  dimmerReadings[dimmerReadIndex] = analogRead(DIMMER);
+  dimmerTotal = dimmerTotal + dimmerReadings[dimmerReadIndex];
+  
+  dimmerReadIndex = dimmerReadIndex + 1;
+  if (dimmerReadIndex >= numReadings)
+    dimmerReadIndex = 0;
+  
+  dimmerAverage = dimmerTotal / numReadings;
+  floatBrightnessValue = (dimmerAverage / 1023.0) * 255.0;
+  currentBrightness = 255 - (int)floatBrightnessValue;
+  
+  if (currentBrightness < 1)
+    currentBrightness = 1;
+  
+  if (currentBrightness != pastBrightness)
+    stripUpdated = true;
+}
+
+void GetColorValue() {
+  colorTotal = colorTotal - colorReadings[colorReadIndex];
+  colorReadings[colorReadIndex] = analogRead(COLOR);
+  colorTotal = colorTotal + colorReadings[colorReadIndex];
+  
+  colorReadIndex = colorReadIndex + 1;
+  if (colorReadIndex >= numReadings)
+    colorReadIndex = 0;
+  
+  colorAverage = colorTotal / numReadings;
+  floatColorValue = (colorAverage / 1023.0) * 255.0;
+  currentWordsColor = 255 - (int)floatColorValue;
+  
+  if (currentWordsColor != pastWordsColor)
+    stripUpdated = true;
+}
+
+uint32_t Wheel(byte wheelPos) {
+  wheelPos = 255 - wheelPos;
+
+  byte threshold1 = 85;
+  byte threshold2 = 170;
+  
+  if (wheelPos < threshold1) {
+    return strip.Color(255 - wheelPos * 3, 0, wheelPos * 3);
+  }
+  else if (wheelPos < threshold2) {
+    wheelPos -= threshold1;
+    return strip.Color(0, wheelPos * 3, 255 - wheelPos * 3);
+  }
+  else {
+    wheelPos -= threshold2;
+    return strip.Color(wheelPos * 3, 255 - wheelPos * 3, 0);
+  }
+}
+
+void CornerWipe(int cornerWipeWidth, int wait) {
+  int index = 0;
+  int colorIndex = 255;
+  
+  SetTime(true);
+  
+  while (true) {
+    int rowIndex = index;
+    for (int y = 0; y < CLOCK_HEIGHT; y++) {
+      for (int x = 0; x < CLOCK_WIDTH; x++) {
+        int* ledPos;
+        IndeciesFromMatrix(ledPos, 1, x, x, y, y);
+        if (x <= rowIndex && x > rowIndex - cornerWipeWidth) {
+            strip.setPixelColor(*ledPos, Wheel((((y * 255) / CLOCK_HEIGHT) + colorIndex) & 255));
+        } else {
+          if (x <= rowIndex - cornerWipeWidth && LEDS[*ledPos]) {
+            strip.setPixelColor(*ledPos, 255, 255, 255);
+          } else {
+            strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
+          }
+        }
+      }
+      rowIndex--;
+    }
+    
+    delay(wait);
+    strip.show();
+    
+    index++;
+    
+    colorIndex--;
+    if (colorIndex == 0) {
+      colorIndex = 255;
+    }
+    if (index == CLOCK_WIDTH + CLOCK_HEIGHT + 3) {
+      break;
+    }
+  }
+}
+
+ISR(PCINT0_vect) {
+  unsigned char hourResult = hourRotary.process();
+  if (hourResult == DIR_CW) {
+    hourOffset++;
+  }
+  else if (hourResult == DIR_CCW) {
+    hourOffset--;
+  }
+  unsigned char minuteResult = minuteRotary.process();
+  if (minuteResult == DIR_CW) {
+    minuteOffset++;
+  }
+  else if (minuteResult == DIR_CCW) {
+    minuteOffset--;
+  }
+}

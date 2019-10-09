@@ -1,5 +1,5 @@
 #include <Time.h>
-#include "RTClib.h"
+#include <RTClib.h>
 #include <Rotary.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -28,13 +28,16 @@ bool LEDS[CLOCK_WIDTH * CLOCK_HEIGHT];
 const int Its_SIZE = 3;
 int Its[Its_SIZE];
 
+const int HappyBirthDay_SIZE = 13;
+const int HappyAnniversary_SIZE = 13;
 const int Happy_SIZE = 5;
 int Happy[Happy_SIZE];
 const int Birth_SIZE = 5;
 int Birth[Birth_SIZE];
 const int Day_SIZE = 3;
 int Day[Day_SIZE];
-
+const int And_SIZE = 1;
+int And[And_SIZE];
 const int Anniversary_SIZE = 11;
 int Anniversary[Anniversary_SIZE];
 
@@ -112,12 +115,7 @@ float floatColorValue = 0.0;
 int pastWordsColor = 0;
 int colorValue = 0;
 
-//int happyBirthDayColor = 255;
-//int slowDownHappyBirthDayRainbowBy = 0;
-//int happyBirthDayColorSlowCounter = 0;
-//int wordColorForRainbow = 255;
-//int slowDownWordRainbowBy = 1;
-//int wordColorForRainbowSlowCounter = 0;
+int rainbowColorIndex = 255;
 
 int currentHour, currentMinute;
 int pastHour, pastMinute;
@@ -143,7 +141,7 @@ void setup() {
 
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
-    while (1);
+    while (true);
   }
   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
@@ -167,7 +165,7 @@ void setup() {
 
 void loop() {
   GetColorValue();
-  GetBrightnessDimmerValue();
+  GetBrightnessValue();
   
   if (millis() - timer >= delayInterval) {
 
@@ -183,7 +181,7 @@ void loop() {
 
           for (int i = 0; i < numReadings; i++) {
             GetColorValue();
-            GetBrightnessDimmerValue();
+            GetBrightnessValue();
             delay(5);
           }
           CornerWipe(3, 40, false);
@@ -204,6 +202,9 @@ void loop() {
     }
     
     SetTime(false);
+
+    RainbowCycle(true, true);
+    stripUpdated = true;
     
     if (stripUpdated) {
       strip.show();
@@ -243,36 +244,37 @@ void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart,
 void SetupWords() {
   IndeciesFromMatrix(Its,   Its_SIZE,   0, 2, 0, 0);
   
-  IndeciesFromMatrix(Happy,       Happy_SIZE,       7, 11, 1, 1);
-  IndeciesFromMatrix(Birth,       Birth_SIZE,       7, 11, 5, 5);
-  IndeciesFromMatrix(Day,         Day_SIZE,         9, 11, 9, 9);
-  IndeciesFromMatrix(Anniversary, Anniversary_SIZE, 9, 11, 9, 9);
+  IndeciesFromMatrix(Happy,       Happy_SIZE,       7, 11, 1,  1);
+  IndeciesFromMatrix(Birth,       Birth_SIZE,       7, 11, 4,  4);
+  IndeciesFromMatrix(Day,         Day_SIZE,         7, 9,  7,  7);
+  IndeciesFromMatrix(And,         And_SIZE,         11,11, 7,  7);
+  IndeciesFromMatrix(Anniversary, Anniversary_SIZE, 1, 11, 10, 10);
 
-  IndeciesFromMatrix(FiveMin,   FiveMin_SIZE,   7, 10, 2, 2);
+  IndeciesFromMatrix(FiveMin,   FiveMin_SIZE,   1, 4 , 2, 2);
   IndeciesFromMatrix(TenMin,    TenMin_SIZE,    8, 10, 0, 0);
-  IndeciesFromMatrix(TwentyMin, TwentyMin_SIZE, 0, 5, 1, 1);
-  IndeciesFromMatrix(Minutes,   Minutes_SIZE,   0, 6, 3, 3);
+  IndeciesFromMatrix(TwentyMin, TwentyMin_SIZE, 0, 5,  1, 1);
+  IndeciesFromMatrix(Minutes,   Minutes_SIZE,   0, 6,  3, 3);
 
-  IndeciesFromMatrix(Half,    Half_SIZE,    4, 7, 0, 0);
-  IndeciesFromMatrix(A,       A_SIZE,       6, 6, 1, 1);
-  IndeciesFromMatrix(Quarter, Quarter_SIZE, 0, 6, 2, 2);
+  IndeciesFromMatrix(Half,    Half_SIZE,    4, 7,  0, 0);
+  IndeciesFromMatrix(A,       A_SIZE,       5, 5,  0, 0);
+  IndeciesFromMatrix(Quarter, Quarter_SIZE, 5, 11, 2, 2);
 
   IndeciesFromMatrix(To,   To_SIZE,   8, 9, 3, 3);
-  IndeciesFromMatrix(Past, Past_SIZE, 0, 3, 4, 4);
+  IndeciesFromMatrix(Past, Past_SIZE, 2, 5, 4, 4);
 
-  IndeciesFromMatrix(One,      One_SIZE,      5, 7, 4, 4);
-  IndeciesFromMatrix(Two,      Two_SIZE,      8, 10, 4, 4);
-  IndeciesFromMatrix(Three,    Three_SIZE,    1, 5, 5, 5);
-  IndeciesFromMatrix(Four,     Four_SIZE,     4, 7, 6, 6);
-  IndeciesFromMatrix(Five,     Five_SIZE,     8, 11, 6, 6);
-  IndeciesFromMatrix(Six,      Six_SIZE,      0, 2, 7, 7);
-  IndeciesFromMatrix(Seven,    Seven_SIZE,    3, 7, 7, 7);
-  IndeciesFromMatrix(Eight,    Eight_SIZE,    0, 4, 8, 8);
-  IndeciesFromMatrix(Nine,     Nine_SIZE,     8, 11, 7, 7);
-  IndeciesFromMatrix(Ten,      Ten_SIZE,      1, 3, 11, 11);
-  IndeciesFromMatrix(Eleven,   Eleven_SIZE,   5, 10, 8, 8);
-  IndeciesFromMatrix(Noon,     Noon_SIZE,     0, 3, 6, 6);
-  IndeciesFromMatrix(Midnight, Midnight_SIZE, 0, 7, 9, 9);
+  IndeciesFromMatrix(One,      One_SIZE,      6, 8,  5,  5);
+  IndeciesFromMatrix(Two,      Two_SIZE,      9, 11, 5,  5);
+  IndeciesFromMatrix(Three,    Three_SIZE,    0, 4 , 5,  5);
+  IndeciesFromMatrix(Four,     Four_SIZE,     4, 7,  6,  6);
+  IndeciesFromMatrix(Five,     Five_SIZE,     8, 11, 6,  6);
+  IndeciesFromMatrix(Six,      Six_SIZE,      9, 11, 8,  8);
+  IndeciesFromMatrix(Seven,    Seven_SIZE,    0, 4,  8,  8);
+  IndeciesFromMatrix(Eight,    Eight_SIZE,    0, 4,  11, 11);
+  IndeciesFromMatrix(Nine,     Nine_SIZE,     5, 8,  8,  8);
+  IndeciesFromMatrix(Ten,      Ten_SIZE,      9, 11, 9,  9);
+  IndeciesFromMatrix(Eleven,   Eleven_SIZE,   0, 5,  7,  7);
+  IndeciesFromMatrix(Noon,     Noon_SIZE,     0, 3,  6,  6);
+  IndeciesFromMatrix(Midnight, Midnight_SIZE, 0, 7,  9,  9);
 
   IndeciesFromMatrix(Oclock,      Oclock_SIZE,      6, 11, 11, 11);
   IndeciesFromMatrix(AndXMinutes, AndXMinutes_SIZE, 8, 11, 12, 12);
@@ -293,13 +295,7 @@ void UpdateTime() {
 }
 
 bool TooDifferent(int a, int b) {
-  if (a > b) {
-    if (a - b > 1) {
-      return true;
-    }
-    return false;
-  }
-  if (b - a > 1) {
+  if (a - b > 1 || b - a > 1) {
     return true;
   }
   return false;
@@ -433,7 +429,54 @@ void TurnOn(int* wordArray, int wordArray_SIZE) {
   }
 }
 
-void GetBrightnessDimmerValue() {
+// TODO: make this work better with wipe
+void RainbowCycle(bool birthday, bool anniversary) {
+  if (rainbowColorIndex == 0)
+    rainbowColorIndex = 255;
+
+  int totalSize = Happy_SIZE;
+  if (birthday) {
+    totalSize += Birth_SIZE + Day_SIZE;
+  }
+  if (anniversary) {
+    totalSize += Anniversary_SIZE;
+  }
+
+  int colorIndex;
+  for(int i = 0; i < Happy_SIZE; i++) {
+    strip.setPixelColor(Happy[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
+    colorIndex++;
+  }
+
+  if (birthday) {
+    for(int i = 0; i < Birth_SIZE; i++) {
+      strip.setPixelColor(Birth[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
+      colorIndex++;
+    }
+    for(int i = 0; i < Day_SIZE; i++) {
+      strip.setPixelColor(Day[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
+      colorIndex++;
+    }
+  }
+
+  if (birthday && anniversary) {
+    for(int i = 0; i < And_SIZE; i++) {
+      strip.setPixelColor(And[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
+      colorIndex++;
+    }
+  }
+
+  if (anniversary) {
+    for(int i = 0; i < Anniversary_SIZE; i++) {
+      strip.setPixelColor(Anniversary[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
+      colorIndex++;
+    }
+  }
+  
+  rainbowColorIndex--;
+}
+
+void GetBrightnessValue() {
   dimmerTotal = dimmerTotal - dimmerReadings[dimmerReadIndex];
   dimmerReadings[dimmerReadIndex] = analogRead(DIMMER);
   dimmerTotal = dimmerTotal + dimmerReadings[dimmerReadIndex];

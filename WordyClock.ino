@@ -95,6 +95,19 @@ int Oclock[Oclock_SIZE];
 const int AndXMinutes_SIZE = 4;
 int AndXMinutes[AndXMinutes_SIZE];
 
+const int NumberOfBirthdays = 2;
+int Birthdays[NumberOfBirthdays][2] = {
+  {10, 10},
+  {24, 8}
+};
+bool ShowBirthdayMsg;
+
+const int NumberOfAnniversaries = 1;
+int Anniversaries[][2] = {
+  {28, 9},
+};
+bool ShowAnniversaryMsg;
+
 const int numReadings = 30;
 
 int dimmerReadings[numReadings];
@@ -175,44 +188,55 @@ void loop() {
       currentEnableState = digitalRead(ENABLE);
       if (currentEnableState != previousEnableState) {
         if (currentEnableState) {
-          ClearStrip();
-          strip.show();
-          digitalWrite(LED_POWER, HIGH);
-
-          for (int i = 0; i < numReadings; i++) {
-            GetColorValue();
-            GetBrightnessValue();
-            delay(5);
-          }
-          CornerWipe(3, 40, false);
-          
+          StartUp();
         } else {
-          CornerWipe(3, 40, true);
-          
-          ClearStrip();
-          strip.show();
-          digitalWrite(LED_POWER, LOW);
+          Shutdown();
         }
         previousEnableState = currentEnableState;
       }
     }
 
-    if (hourOffset != 0 || minuteOffset != 0) {
-      UpdateTime();
-    }
-    
-    SetTime(false);
+    if (currentEnableState) {
+      if (hourOffset != 0 || minuteOffset != 0) {
+        UpdateTime();
+      }
+      
+      SetTime(false);
 
-    RainbowCycle(true, true);
-    stripUpdated = true;
-    
-    if (stripUpdated) {
-      strip.show();
-      stripUpdated = false;
+      if (ShowBirthdayMsg || ShowAnniversaryMsg) {
+        stripUpdated = true;
+        RainbowCycle(ShowBirthdayMsg, ShowAnniversaryMsg);
+      }
+      
+      if (stripUpdated) {
+        strip.show();
+        stripUpdated = false;
+      }
     }
 
     timer = millis();
   }
+}
+
+void StartUp() {
+  ClearStrip();
+  strip.show();
+  digitalWrite(LED_POWER, HIGH);
+
+  for (int i = 0; i < numReadings; i++) {
+    GetColorValue();
+    GetBrightnessValue();
+    delay(5);
+  }
+  CornerWipe(3, 40, false);
+}
+
+void Shutdown() {
+  CornerWipe(3, 40, true);
+  
+  ClearStrip();
+  strip.show();
+  digitalWrite(LED_POWER, LOW);
 }
 
 void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart, int yEnd) {
@@ -294,6 +318,16 @@ void UpdateTime() {
   minuteOffset = 0;
 }
 
+bool CheckEvent(int dates[][2], int numDates) {
+  DateTime now = rtc.now();
+  for (int i = 0; i < numDates; i++) {
+    if (dates[i][0] == now.day() && dates[i][1] == now.month()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool TooDifferent(int a, int b) {
   if (a - b > 1 || b - a > 1) {
     return true;
@@ -313,6 +347,9 @@ void SetTime(bool force){
     pastMinute = currentMinute;
     pastWordsColor = currentWordsColor;
     pastBrightness = currentBrightness;
+
+    ShowBirthdayMsg = CheckEvent(Birthdays, NumberOfBirthdays);
+    ShowAnniversaryMsg = CheckEvent(Anniversaries, NumberOfAnniversaries);
 
     strip.setBrightness(currentBrightness);
     
@@ -536,7 +573,9 @@ void CornerWipe(int cornerWipeWidth, int wait, bool wipe) {
   int index = 0;
   int colorIndex = 255;
   
-  SetTime(true);
+  if (!wipe) {
+    SetTime(true);
+  }
   
   while (true) {
     int rowIndex = index;

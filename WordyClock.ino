@@ -97,8 +97,9 @@ int AndXMinutes[AndXMinutes_SIZE];
 
 const int NumberOfBirthdays = 2;
 int Birthdays[NumberOfBirthdays][2] = {
-  {10, 10},
-  {24, 8}
+  {26, 1},
+  {24, 8},
+  {30, 11},
 };
 bool ShowBirthdayMsg;
 

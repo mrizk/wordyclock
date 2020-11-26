@@ -99,13 +99,13 @@ const int NumberOfBirthdays = 2;
 int Birthdays[NumberOfBirthdays][2] = {
   {26, 1},
   {24, 8},
-  {30, 11},
 };
 bool ShowBirthdayMsg;
 
-const int NumberOfAnniversaries = 1;
-int Anniversaries[][2] = {
-  {28, 9},
+const int NumberOfAnniversaries = 2;
+int Anniversaries[][4] = {
+  {26, 1, 20, 0},
+  {30, 11, 0, 0},
 };
 bool ShowAnniversaryMsg;
 
@@ -319,10 +319,10 @@ void UpdateTime() {
   minuteOffset = 0;
 }
 
-bool CheckEvent(int dates[][2], int numDates) {
+bool CheckEvent(int dates[][4], int numDates) {
   DateTime now = rtc.now();
   for (int i = 0; i < numDates; i++) {
-    if (dates[i][0] == now.day() && dates[i][1] == now.month()) {
+    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] >= now.hour() && dates[i][3] >= now.minute()) {
       return true;
     }
   }

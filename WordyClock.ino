@@ -96,9 +96,9 @@ const int AndXMinutes_SIZE = 4;
 int AndXMinutes[AndXMinutes_SIZE];
 
 const int NumberOfBirthdays = 2;
-int Birthdays[NumberOfBirthdays][2] = {
-  {26, 1},
-  {24, 8},
+int Birthdays[NumberOfBirthdays][4] = {
+  {26, 1, 0, 0},
+  {24, 8, 0, 0},
 };
 bool ShowBirthdayMsg;
 
@@ -151,7 +151,7 @@ unsigned long timer;
 bool previousEnableState, currentEnableState;
 
 void setup() {
-   Serial.begin(9600);
+  Serial.begin(9600);
 
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
@@ -180,7 +180,7 @@ void setup() {
 void loop() {
   GetColorValue();
   GetBrightnessValue();
-  
+
   if (millis() - timer >= delayInterval) {
 
     currentEnableState = digitalRead(ENABLE);

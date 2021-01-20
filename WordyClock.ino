@@ -109,6 +109,23 @@ int Anniversaries[][4] = {
 };
 bool ShowAnniversaryMsg;
 
+
+// 5x8 Serialized Digits
+const int DigitsDisplay_WIDTH = 5;
+const int DigitsDisplay_HEIGHT = 8;
+bool Digits[10][40] = {
+  {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 0
+  {0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1}, // 1
+  {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1}, // 2
+  {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 3
+  {0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0}, // 4
+  {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 5
+  {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 6
+  {1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0}, // 7
+  {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 8
+  {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 9
+};
+
 const int numReadings = 30;
 
 int dimmerReadings[numReadings];
@@ -264,6 +281,21 @@ void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart,
       }
     }
   }
+}
+
+int IndexFromCoordinates(int x, int y) {
+  int index;
+  if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_TOP_RIGHT) {
+    index += y * CLOCK_WIDTH;
+  } else if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
+    index += (CLOCK_HEIGHT - y) * CLOCK_WIDTH;
+  }
+  if ((CLOCK_ORIGIN == ORIGIN_TOP_LEFT && x%2 == 0) || (CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT && x%2 == 1)) {
+    index += x;
+  } else if ((CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT && x%2 == 1) || (CLOCK_ORIGIN == ORIGIN_TOP_RIGHT && x%2 == 0)) {
+    index += CLOCK_WIDTH - x;
+  }
+  return index;
 }
 
 void SetupWords() {
@@ -467,6 +499,13 @@ void TurnOn(int* wordArray, int wordArray_SIZE) {
   }
 }
 
+void TurnOff(int* wordArray, int wordArray_SIZE) {
+  for(int i = 0; i < wordArray_SIZE; i++) {
+    strip.setPixelColor(wordArray[i], strip.Color(0, 0, 0));
+    LEDS[wordArray[i]] = false;
+  }
+}
+
 // TODO: make this work better with wipe
 void RainbowCycle(bool birthday, bool anniversary) {
   if (rainbowColorIndex == 0)
@@ -632,5 +671,20 @@ ISR(PCINT0_vect) {
   }
   else if (minuteResult == DIR_CCW) {
     minuteOffset--;
+  }
+}
+
+void DisplayDigit(int digit, int offsetX, int offsetY) {
+  for (int i = 0; i < DigitsDisplay_WIDTH; i++) {
+    for (int j = 0; j < DigitsDisplay_HEIGHT; j++) {
+      if (offsetX+i < CLOCK_WIDTH && offsetY+j < CLOCK_HEIGHT) {
+        int index = IndexFromCoordinates(offsetX+i, offsetY+j);
+        if (Digits[digit][(j*DigitsDisplay_WIDTH)+i]) {
+          TurnOn(&index, 1);
+        } else {
+          TurnOff(&index, 1);
+        }
+      }
+    }
   }
 }

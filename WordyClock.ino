@@ -198,6 +198,14 @@ void loop() {
   GetColorValue();
   GetBrightnessValue();
 
+  while(true) {
+    for (int i = 0; i < 10; i++) {
+      DisplayDigit(i, 0, 0);
+      strip.show();
+      delay(1000);
+    }
+  }
+
   if (millis() - timer >= delayInterval) {
 
     currentEnableState = digitalRead(ENABLE);
@@ -290,10 +298,18 @@ int IndexFromCoordinates(int x, int y) {
   } else if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
     index += (CLOCK_HEIGHT - y) * CLOCK_WIDTH;
   }
-  if ((CLOCK_ORIGIN == ORIGIN_TOP_LEFT && x%2 == 0) || (CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT && x%2 == 1)) {
-    index += x;
-  } else if ((CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT && x%2 == 1) || (CLOCK_ORIGIN == ORIGIN_TOP_RIGHT && x%2 == 0)) {
-    index += CLOCK_WIDTH - x;
+  if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT) {
+    if (x%2 == 0) {
+      index += x;
+    } else {
+      index += CLOCK_WIDTH - x;
+    }
+  } else if (CLOCK_ORIGIN == ORIGIN_TOP_RIGHT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
+    if (x%2 == 0) {
+      index += CLOCK_WIDTH - x;
+    } else {
+      index += x;
+    }
   }
   return index;
 }

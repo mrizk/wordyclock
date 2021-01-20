@@ -198,14 +198,6 @@ void loop() {
   GetColorValue();
   GetBrightnessValue();
 
-  while(true) {
-    for (int i = 0; i < 10; i++) {
-      DisplayDigit(i, 0, 0);
-      strip.show();
-      delay(1000);
-    }
-  }
-
   if (millis() - timer >= delayInterval) {
 
     currentEnableState = digitalRead(ENABLE);

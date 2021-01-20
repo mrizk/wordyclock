@@ -95,17 +95,19 @@ int Oclock[Oclock_SIZE];
 const int AndXMinutes_SIZE = 4;
 int AndXMinutes[AndXMinutes_SIZE];
 
-const int NumberOfBirthdays = 2;
+const int NumberOfBirthdays = 3;
 int Birthdays[NumberOfBirthdays][4] = {
   {26, 1, 0, 0},
   {24, 8, 0, 0},
+  {21, 1, 0, 0},
 };
 bool ShowBirthdayMsg;
 
-const int NumberOfAnniversaries = 2;
+const int NumberOfAnniversaries = 3;
 int Anniversaries[][4] = {
   {26, 1, 20, 0},
   {30, 11, 0, 0},
+  {20, 1, 0, 0},
 };
 bool ShowAnniversaryMsg;
 
@@ -115,7 +117,7 @@ const int DigitsDisplay_WIDTH = 5;
 const int DigitsDisplay_HEIGHT = 8;
 bool Digits[10][40] = {
   {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 0
-  {0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1}, // 1
+  {0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0}, // 1
   {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1}, // 2
   {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 3
   {0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0}, // 4
@@ -291,14 +293,14 @@ int IndexFromCoordinates(int x, int y) {
     index += (CLOCK_HEIGHT - y) * CLOCK_WIDTH;
   }
   if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT) {
-    if (x%2 == 0) {
+    if (y%2 == 0) {
       index += x;
     } else {
-      index += CLOCK_WIDTH - x;
+      index += CLOCK_WIDTH - x - 1;
     }
   } else if (CLOCK_ORIGIN == ORIGIN_TOP_RIGHT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
-    if (x%2 == 0) {
-      index += CLOCK_WIDTH - x;
+    if (y%2 == 0) {
+      index += CLOCK_WIDTH - x - 1;
     } else {
       index += x;
     }
@@ -362,7 +364,7 @@ void UpdateTime() {
 bool CheckEvent(int dates[][4], int numDates) {
   DateTime now = rtc.now();
   for (int i = 0; i < numDates; i++) {
-    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] >= now.hour() && dates[i][3] >= now.minute()) {
+    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour() && dates[i][3] <= now.minute()) {
       return true;
     }
   }
@@ -685,7 +687,7 @@ ISR(PCINT0_vect) {
 void DisplayDigit(int digit, int offsetX, int offsetY) {
   for (int i = 0; i < DigitsDisplay_WIDTH; i++) {
     for (int j = 0; j < DigitsDisplay_HEIGHT; j++) {
-      if (offsetX+i < CLOCK_WIDTH && offsetY+j < CLOCK_HEIGHT) {
+      if (offsetX+i > 0 && offsetX+i < CLOCK_WIDTH && offsetY+j > 0 && offsetY+j < CLOCK_HEIGHT) {
         int index = IndexFromCoordinates(offsetX+i, offsetY+j);
         if (Digits[digit][(j*DigitsDisplay_WIDTH)+i]) {
           TurnOn(&index, 1);

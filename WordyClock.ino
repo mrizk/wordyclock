@@ -166,6 +166,7 @@ bool stripUpdated = false;
 
 unsigned long delayInterval = 50;
 unsigned long timer;
+unsigned long countdownTimer;
 
 bool previousEnableState, currentEnableState;
 
@@ -248,6 +249,8 @@ void StartUp() {
     GetBrightnessValue();
     delay(5);
   }
+  strip.setBrightness(50);
+  TheaterChaseCountdown(50, 30, strip.Color(255, 255, 255), strip.Color(255, 0, 0));
   CornerWipe(3, 40, false);
 }
 
@@ -694,6 +697,73 @@ void DisplayDigit(int digit, int offsetX, int offsetY) {
         } else {
           TurnOff(&index, 1);
         }
+      }
+    }
+  }
+}
+
+void OverlayDigit(int digit, int offsetX, int offsetY, uint32_t color) {
+  for (int i = 0; i < DigitsDisplay_WIDTH; i++) {
+    for (int j = 0; j < DigitsDisplay_HEIGHT; j++) {
+      if (offsetX+i > 0 && offsetX+i < CLOCK_WIDTH && offsetY+j > 0 && offsetY+j < CLOCK_HEIGHT) {
+        int index = IndexFromCoordinates(offsetX+i, offsetY+j);
+        if (Digits[digit][(j*DigitsDisplay_WIDTH)+i]) {
+          strip.setPixelColor(index, color);
+          LEDS[index] = true;
+        }
+      }
+    }
+  }
+}
+
+void RainbowCountdown(int wait, int counter) {
+  countdownTimer = millis();
+  uint32_t color = strip.Color(255, 255, 255);
+  while (true) {
+    for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
+      for(int i=0; i<strip.numPixels(); i++) { 
+        int pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
+        strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(pixelHue)));
+      }
+      if (millis() - countdownTimer >= 1000) {
+        counter--;
+        countdownTimer = millis();
+        if (counter == 0) return;
+      }
+      if (counter >= 10) {
+        OverlayDigit(counter/10, 0, 2, color);
+        OverlayDigit(counter%10, 7, 2, color);
+      } else {
+        OverlayDigit(counter, 4, 2, color);
+      }
+      strip.show();
+      delay(wait);
+    }
+  }
+}
+
+void TheaterChaseCountdown(int wait, int counter, uint32_t color, uint32_t countdownColor) {
+  countdownTimer = millis();
+  while (true) {
+    for(int a=0; a<10; a++) { 
+      for(int b=0; b<3; b++) { 
+        strip.clear();
+        for(int c=b; c<strip.numPixels(); c += 3) {
+          strip.setPixelColor(c, color);
+        }
+        if (millis() - countdownTimer >= 1000) {
+          counter--;
+          countdownTimer = millis();
+          if (counter == 0) return;
+        }
+        if (counter >= 10) {
+          OverlayDigit(counter/10, 0, 2, countdownColor);
+          OverlayDigit(counter%10, 7, 2, countdownColor);
+        } else {
+          OverlayDigit(counter, 4, 2, countdownColor);
+        }
+        strip.show();
+        delay(wait);
       }
     }
   }

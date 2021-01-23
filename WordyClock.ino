@@ -25,86 +25,86 @@
 
 bool LEDS[CLOCK_WIDTH * CLOCK_HEIGHT];
 
-const int Its_SIZE = 3;
-int Its[Its_SIZE];
+const byte Its_SIZE = 3;
+byte Its[Its_SIZE];
 
-const int HappyBirthDay_SIZE = 13;
-const int HappyAnniversary_SIZE = 13;
-const int Happy_SIZE = 5;
-int Happy[Happy_SIZE];
-const int Birth_SIZE = 5;
-int Birth[Birth_SIZE];
-const int Day_SIZE = 3;
-int Day[Day_SIZE];
-const int And_SIZE = 1;
-int And[And_SIZE];
-const int Anniversary_SIZE = 11;
-int Anniversary[Anniversary_SIZE];
+const byte HappyBirthDay_SIZE = 13;
+const byte HappyAnniversary_SIZE = 13;
+const byte Happy_SIZE = 5;
+byte Happy[Happy_SIZE];
+const byte Birth_SIZE = 5;
+byte Birth[Birth_SIZE];
+const byte Day_SIZE = 3;
+byte Day[Day_SIZE];
+const byte And_SIZE = 1;
+byte And[And_SIZE];
+const byte Anniversary_SIZE = 11;
+byte Anniversary[Anniversary_SIZE];
 
-const int FiveMin_SIZE = 4;
-int FiveMin[FiveMin_SIZE];
-const int TenMin_SIZE = 3;
-int TenMin[TenMin_SIZE];
-const int TwentyMin_SIZE = 6;
-int TwentyMin[TwentyMin_SIZE];
-const int Minutes_SIZE = 7;
-int Minutes[Minutes_SIZE];
+const byte FiveMin_SIZE = 4;
+byte FiveMin[FiveMin_SIZE];
+const byte TenMin_SIZE = 3;
+byte TenMin[TenMin_SIZE];
+const byte TwentyMin_SIZE = 6;
+byte TwentyMin[TwentyMin_SIZE];
+const byte Minutes_SIZE = 7;
+byte Minutes[Minutes_SIZE];
 
-const int Half_SIZE = 4;
-int Half[Half_SIZE];
-const int A_SIZE = 1;
-int A[A_SIZE];
-const int Quarter_SIZE = 7;
-int Quarter[Quarter_SIZE];
+const byte Half_SIZE = 4;
+byte Half[Half_SIZE];
+const byte A_SIZE = 1;
+byte A[A_SIZE];
+const byte Quarter_SIZE = 7;
+byte Quarter[Quarter_SIZE];
 
-const int To_SIZE = 2;
-int To[To_SIZE];
-const int Past_SIZE = 4;
-int Past[Past_SIZE];
+const byte To_SIZE = 2;
+byte To[To_SIZE];
+const byte Past_SIZE = 4;
+byte Past[Past_SIZE];
 
-const int One_SIZE = 3;
-int One[One_SIZE];
-const int Two_SIZE = 3;
-int Two[Two_SIZE];
-const int Three_SIZE = 5;
-int Three[Three_SIZE];
-const int Four_SIZE = 4;
-int Four[Four_SIZE];
-const int Five_SIZE = 4;
-int Five[Five_SIZE];
-const int Six_SIZE = 3;
-int Six[Six_SIZE];
-const int Seven_SIZE = 5;
-int Seven[Seven_SIZE];
-const int Eight_SIZE = 5;
-int Eight[Eight_SIZE];
-const int Nine_SIZE = 4;
-int Nine[Nine_SIZE];
-const int Ten_SIZE = 3;
-int Ten[Ten_SIZE];
-const int Eleven_SIZE = 6;
-int Eleven[Eleven_SIZE];
-const int Noon_SIZE = 4;
-int Noon[Noon_SIZE];
-const int Midnight_SIZE = 8;
-int Midnight[Midnight_SIZE];
+const byte One_SIZE = 3;
+byte One[One_SIZE];
+const byte Two_SIZE = 3;
+byte Two[Two_SIZE];
+const byte Three_SIZE = 5;
+byte Three[Three_SIZE];
+const byte Four_SIZE = 4;
+byte Four[Four_SIZE];
+const byte Five_SIZE = 4;
+byte Five[Five_SIZE];
+const byte Six_SIZE = 3;
+byte Six[Six_SIZE];
+const byte Seven_SIZE = 5;
+byte Seven[Seven_SIZE];
+const byte Eight_SIZE = 5;
+byte Eight[Eight_SIZE];
+const byte Nine_SIZE = 4;
+byte Nine[Nine_SIZE];
+const byte Ten_SIZE = 3;
+byte Ten[Ten_SIZE];
+const byte Eleven_SIZE = 6;
+byte Eleven[Eleven_SIZE];
+const byte Noon_SIZE = 4;
+byte Noon[Noon_SIZE];
+const byte Midnight_SIZE = 8;
+byte Midnight[Midnight_SIZE];
 
-const int Oclock_SIZE = 6;
-int Oclock[Oclock_SIZE];
+const byte Oclock_SIZE = 6;
+byte Oclock[Oclock_SIZE];
 
-const int AndXMinutes_SIZE = 4;
-int AndXMinutes[AndXMinutes_SIZE];
+const byte AndXMinutes_SIZE = 4;
+byte AndXMinutes[AndXMinutes_SIZE];
 
-const int NumberOfBirthdays = 3;
-int Birthdays[NumberOfBirthdays][4] = {
+const byte NumberOfBirthdays = 3;
+byte Birthdays[NumberOfBirthdays][4] = {
   {26, 1, 0, 0},
   {24, 8, 0, 0},
   {21, 1, 0, 0},
 };
 bool ShowBirthdayMsg;
 
-const int NumberOfAnniversaries = 3;
-int Anniversaries[][4] = {
+const byte NumberOfAnniversaries = 3;
+byte Anniversaries[][4] = {
   {26, 1, 20, 0},
   {30, 11, 0, 0},
   {20, 1, 0, 0},
@@ -113,8 +113,8 @@ bool ShowAnniversaryMsg;
 
 
 // 5x8 Serialized Digits
-const int DigitsDisplay_WIDTH = 5;
-const int DigitsDisplay_HEIGHT = 8;
+const byte DigitsDisplay_WIDTH = 5;
+const byte DigitsDisplay_HEIGHT = 8;
 bool Digits[10][40] = {
   {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 0
   {0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0}, // 1
@@ -128,45 +128,48 @@ bool Digits[10][40] = {
   {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0}, // 9
 };
 
-const int numReadings = 30;
+const byte numReadings = 30;
 
-int dimmerReadings[numReadings];
-int dimmerReadIndex = 0;
-int dimmerTotal = 0;
-int dimmerAverage = 0;
-int brightnessValue = 0;
+byte dimmerReadings[numReadings];
+byte dimmerReadIndex = 0;
+byte dimmerTotal = 0;
+byte dimmerAverage = 0;
+byte brightnessValue = 0;
 float floatBrightnessValue = 0.0;
-int pastBrightness = 0;
-int currentBrightness = 0;
+byte pastBrightness = 0;
+byte currentBrightness = 0;
 
-int colorReadings[numReadings];
-int colorReadIndex = 0;
-int colorTotal = 0;
-int colorAverage = 0;
-int currentWordsColor = 0;
+byte colorReadings[numReadings];
+byte colorReadIndex = 0;
+byte colorTotal = 0;
+byte colorAverage = 0;
+byte currentWordsColor = 0;
 float floatColorValue = 0.0;
-int pastWordsColor = 0;
-int colorValue = 0;
+byte pastWordsColor = 0;
+byte colorValue = 0;
 
-int rainbowColorIndex = 255;
+byte rainbowColorIndex = 255;
 
-int currentHour, currentMinute;
-int pastHour, pastMinute;
-int hourToShow;
+byte currentHour, currentMinute;
+byte pastHour, pastMinute;
+byte hourToShow;
 
 RTC_DS3231 rtc;
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS, STRIP, NEO_GRB + NEO_KHZ800);
 Rotary hourRotary = Rotary(HOUR_PINA, HOUR_PINB);
 Rotary minuteRotary = Rotary(MINUTE_PINA, MINUTE_PINB);
 
-volatile int hourOffset;
-volatile int minuteOffset;
+volatile byte hourOffset;
+volatile byte minuteOffset;
 
 bool stripUpdated = false;
 
-unsigned long delayInterval = 50;
+const byte DelayInterval = 50;
 unsigned long timer;
 unsigned long countdownTimer;
+
+const byte CornerWipeWidth = 3;
+const byte CountdownFrom = 30; // max 60
 
 bool previousEnableState, currentEnableState;
 
@@ -178,7 +181,6 @@ void setup() {
     while (true);
   }
   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-
   // Serial.print(rtc.getTemperature());
   
   SetupWords();
@@ -201,7 +203,7 @@ void loop() {
   GetColorValue();
   GetBrightnessValue();
 
-  if (millis() - timer >= delayInterval) {
+  if (millis() - timer >= DelayInterval) {
 
     currentEnableState = digitalRead(ENABLE);
     if (currentEnableState != previousEnableState) {
@@ -220,6 +222,11 @@ void loop() {
     if (currentEnableState) {
       if (hourOffset != 0 || minuteOffset != 0) {
         UpdateTime();
+      }
+
+      if (StartCountdown(CountdownFrom)) {
+        TheaterChaseCountdown(DelayInterval, CountdownFrom, strip.Color(255, 255, 255), strip.Color(255, 0, 0)); // Wheel(currentWordsColor)
+        CornerWipe(DelayInterval, CornerWipeWidth, false);
       }
       
       SetTime(false);
@@ -249,24 +256,23 @@ void StartUp() {
     GetBrightnessValue();
     delay(5);
   }
-  strip.setBrightness(50);
-  TheaterChaseCountdown(50, 30, strip.Color(255, 255, 255), strip.Color(255, 0, 0));
-  CornerWipe(3, 40, false);
+  strip.setBrightness(50); // TODO: remove this when brightness dimmer is connected
+  CornerWipe(DelayInterval, 3, false);
 }
 
 void Shutdown() {
-  CornerWipe(3, 40, true);
+  CornerWipe(DelayInterval, 3, true);
   
   ClearStrip();
   strip.show();
   digitalWrite(LED_POWER, LOW);
 }
 
-void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart, int yEnd) {
-  int i = 0;
+void IndeciesFromMatrix(byte* arr, byte arrSize, byte xStart, byte xEnd, byte yStart, byte yEnd) {
+  byte i = 0;
   for (int y = 0; y < CLOCK_HEIGHT; y++){
     if (y >= yStart && y <= yEnd){
-      int yPos = y;
+      byte yPos = y;
 
       if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
         yPos = CLOCK_HEIGHT - yPos;
@@ -274,12 +280,14 @@ void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart,
 
       for (int x = 0; x < CLOCK_WIDTH; x++){
         if (x >= xStart && x <= xEnd){
-          int xPos = x;
+          byte xPos = x;
           if ((CLOCK_ORIGIN == ORIGIN_TOP_RIGHT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) && y % 2 == 0){
             xPos = (CLOCK_WIDTH - 1) - xPos;
           } else if ((CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT) && y % 2 == 1){
             xPos = (CLOCK_WIDTH - 1) - xPos;
           }
+          if (i >= arrSize)
+            return;
           arr[i] = (yPos * CLOCK_WIDTH) + xPos;
           i++;
         }
@@ -288,8 +296,8 @@ void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart,
   }
 }
 
-int IndexFromCoordinates(int x, int y) {
-  int index;
+byte IndexFromCoordinates(byte x, byte y) {
+  byte index;
   if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_TOP_RIGHT) {
     index += y * CLOCK_WIDTH;
   } else if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
@@ -364,17 +372,17 @@ void UpdateTime() {
   minuteOffset = 0;
 }
 
-bool CheckEvent(int dates[][4], int numDates) {
+bool CheckEvent(byte dates[][4], byte numDates, byte minOffset) {
   DateTime now = rtc.now();
   for (int i = 0; i < numDates; i++) {
-    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour() && dates[i][3] <= now.minute()) {
+    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour() && (dates[i][3] - minOffset) <= now.minute()) {
       return true;
     }
   }
   return false;
 }
 
-bool TooDifferent(int a, int b) {
+bool TooDifferent(byte a, byte b) {
   if (a - b > 1 || b - a > 1) {
     return true;
   }
@@ -394,8 +402,8 @@ void SetTime(bool force){
     pastWordsColor = currentWordsColor;
     pastBrightness = currentBrightness;
 
-    ShowBirthdayMsg = CheckEvent(Birthdays, NumberOfBirthdays);
-    ShowAnniversaryMsg = CheckEvent(Anniversaries, NumberOfAnniversaries);
+    ShowBirthdayMsg = CheckEvent(Birthdays, NumberOfBirthdays, 0);
+    ShowAnniversaryMsg = CheckEvent(Anniversaries, NumberOfAnniversaries, 0);
 
     strip.setBrightness(currentBrightness);
     
@@ -433,7 +441,7 @@ void SetTime(bool force){
     }
     
     for (int i = 0; i < (currentMinute % 5); i++){
-      int* ptr_minute = &AndXMinutes[i];
+      byte* ptr_minute = &AndXMinutes[i];
       TurnOn(ptr_minute, 1);
     }
     
@@ -498,7 +506,7 @@ void SetTime(bool force){
   }
 }
 
-void TurnOn(int* wordArray, int wordArray_SIZE) {
+void TurnOn(byte* wordArray, byte wordArray_SIZE) {
   if (currentWordsColor >= 254) {
     for(int i = 0; i < wordArray_SIZE; i++) {
       strip.setPixelColor(wordArray[i], 255, 255, 255);
@@ -506,25 +514,24 @@ void TurnOn(int* wordArray, int wordArray_SIZE) {
     }
   } else {
     for(int i = 0; i < wordArray_SIZE; i++) {
-      strip.setPixelColor(wordArray[i], Wheel(((i * 256) + currentWordsColor) & 255));
+      strip.setPixelColor(wordArray[i], Wheel(currentWordsColor));
       LEDS[wordArray[i]] = true;
     }
   }
 }
 
-void TurnOff(int* wordArray, int wordArray_SIZE) {
+void TurnOff(byte* wordArray, byte wordArray_SIZE) {
   for(int i = 0; i < wordArray_SIZE; i++) {
     strip.setPixelColor(wordArray[i], strip.Color(0, 0, 0));
     LEDS[wordArray[i]] = false;
   }
 }
 
-// TODO: make this work better with wipe
 void RainbowCycle(bool birthday, bool anniversary) {
   if (rainbowColorIndex == 0)
     rainbowColorIndex = 255;
 
-  int totalSize = Happy_SIZE;
+  byte totalSize = Happy_SIZE;
   if (birthday) {
     totalSize += Birth_SIZE + Day_SIZE;
   }
@@ -532,7 +539,7 @@ void RainbowCycle(bool birthday, bool anniversary) {
     totalSize += Anniversary_SIZE;
   }
 
-  int colorIndex;
+  byte colorIndex;
   for(int i = 0; i < Happy_SIZE; i++) {
     strip.setPixelColor(Happy[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
     colorIndex++;
@@ -577,7 +584,7 @@ void GetBrightnessValue() {
   
   dimmerAverage = dimmerTotal / numReadings;
   floatBrightnessValue = (dimmerAverage / 1023.0) * 255.0;
-  currentBrightness = 255 - (int)floatBrightnessValue;
+  currentBrightness = 255 - (byte)floatBrightnessValue;
   
   if (currentBrightness < 1)
     currentBrightness = 1;
@@ -597,7 +604,7 @@ void GetColorValue() {
   
   colorAverage = colorTotal / numReadings;
   floatColorValue = (colorAverage / 1023.0) * 255.0;
-  currentWordsColor = 255 - (int)floatColorValue;
+  currentWordsColor = 255 - (byte)floatColorValue;
   
   if (currentWordsColor != pastWordsColor)
     stripUpdated = true;
@@ -622,32 +629,34 @@ uint32_t Wheel(byte wheelPos) {
   }
 }
 
-void CornerWipe(int cornerWipeWidth, int wait, bool wipe) {
-  int index = 0;
-  int colorIndex = 255;
+void CornerWipe(unsigned long wait, byte cornerWipeWidth, bool wipe) {
+  byte index = 0;
+  byte colorIndex = 255;
   
   if (!wipe) {
     SetTime(true);
   }
   
   while (true) {
-    int rowIndex = index;
+    byte rowIndex = index;
     for (int y = 0; y < CLOCK_HEIGHT; y++) {
       for (int x = 0; x < CLOCK_WIDTH; x++) {
-        int* ledPos;
-        IndeciesFromMatrix(ledPos, 1, x, x, y, y);
+        byte ledPos = IndexFromCoordinates(x, y);
+        if (y == CLOCK_HEIGHT - 1) { // TODO: generalize this
+          ledPos -= AndXMinutes_SIZE;
+        }
         if (x <= rowIndex && x > rowIndex - cornerWipeWidth) {
-            strip.setPixelColor(*ledPos, Wheel((((y * 255) / CLOCK_HEIGHT) + colorIndex) & 255));
+            strip.setPixelColor(ledPos, Wheel((((y * 255) / CLOCK_HEIGHT) + colorIndex) & 255));
         } else {
           if (wipe) {
             if (x <= rowIndex - cornerWipeWidth) {
-              strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
+              strip.setPixelColor(ledPos, strip.Color(0, 0, 0));
             }
           } else {
-            if (x <= rowIndex - cornerWipeWidth && LEDS[*ledPos]) {
-              strip.setPixelColor(*ledPos, Wheel(currentWordsColor));
+            if (x <= rowIndex - cornerWipeWidth && LEDS[ledPos]) {
+              strip.setPixelColor(ledPos, Wheel(currentWordsColor));
             } else {
-              strip.setPixelColor(*ledPos, strip.Color(0, 0, 0));
+              strip.setPixelColor(ledPos, strip.Color(0, 0, 0));
             }
           }
         }
@@ -687,11 +696,11 @@ ISR(PCINT0_vect) {
   }
 }
 
-void DisplayDigit(int digit, int offsetX, int offsetY) {
+void DisplayDigit(byte digit, byte offsetX, byte offsetY) {
   for (int i = 0; i < DigitsDisplay_WIDTH; i++) {
     for (int j = 0; j < DigitsDisplay_HEIGHT; j++) {
       if (offsetX+i > 0 && offsetX+i < CLOCK_WIDTH && offsetY+j > 0 && offsetY+j < CLOCK_HEIGHT) {
-        int index = IndexFromCoordinates(offsetX+i, offsetY+j);
+        byte index = IndexFromCoordinates(offsetX+i, offsetY+j);
         if (Digits[digit][(j*DigitsDisplay_WIDTH)+i]) {
           TurnOn(&index, 1);
         } else {
@@ -702,11 +711,11 @@ void DisplayDigit(int digit, int offsetX, int offsetY) {
   }
 }
 
-void OverlayDigit(int digit, int offsetX, int offsetY, uint32_t color) {
+void OverlayDigit(byte digit, byte offsetX, byte offsetY, uint32_t color) {
   for (int i = 0; i < DigitsDisplay_WIDTH; i++) {
     for (int j = 0; j < DigitsDisplay_HEIGHT; j++) {
       if (offsetX+i > 0 && offsetX+i < CLOCK_WIDTH && offsetY+j > 0 && offsetY+j < CLOCK_HEIGHT) {
-        int index = IndexFromCoordinates(offsetX+i, offsetY+j);
+        byte index = IndexFromCoordinates(offsetX+i, offsetY+j);
         if (Digits[digit][(j*DigitsDisplay_WIDTH)+i]) {
           strip.setPixelColor(index, color);
           LEDS[index] = true;
@@ -716,7 +725,17 @@ void OverlayDigit(int digit, int offsetX, int offsetY, uint32_t color) {
   }
 }
 
-void RainbowCountdown(int wait, int counter) {
+bool StartCountdown(byte counter) {
+  DateTime now = rtc.now();
+  if (CheckEvent(Birthdays, NumberOfBirthdays, 1) || CheckEvent(Anniversaries, NumberOfAnniversaries, 1)) {
+    if (now.second() == (60 - counter)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void RainbowCountdown(unsigned long wait, byte counter) {
   countdownTimer = millis();
   uint32_t color = strip.Color(255, 255, 255);
   while (true) {
@@ -742,7 +761,7 @@ void RainbowCountdown(int wait, int counter) {
   }
 }
 
-void TheaterChaseCountdown(int wait, int counter, uint32_t color, uint32_t countdownColor) {
+void TheaterChaseCountdown(unsigned long wait, byte counter, uint32_t color, uint32_t countdownColor) {
   countdownTimer = millis();
   while (true) {
     for(int a=0; a<10; a++) { 

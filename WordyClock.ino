@@ -587,6 +587,7 @@ void GetBrightnessValue() {
   dimmerAverage = dimmerTotal / numReadings;
   floatBrightnessValue = (dimmerAverage / 1023.0) * 255.0;
   currentBrightness = 255 - (int)floatBrightnessValue;
+  currentBrightness = 255; // TODO: remove this once dimmer is connected
   
   if (currentBrightness < 1)
     currentBrightness = 1;
@@ -595,7 +596,7 @@ void GetBrightnessValue() {
     stripUpdated = true;
 }
 
-void GetColorValue() { // TODO: figure out why it dims below green
+void GetColorValue() {
   colorTotal = colorTotal - colorReadings[colorReadIndex];
   colorReadings[colorReadIndex] = analogRead(COLOR);
   colorTotal = colorTotal + colorReadings[colorReadIndex];
@@ -646,7 +647,9 @@ void CornerWipe(unsigned long wait, int cornerWipeWidth, bool wipe) {
         int ledPos = IndexFromCoordinates(x, y);
         if (y == CLOCK_HEIGHT - 1) { // TODO: generalize this
           ledPos -= AndXMinutes_SIZE;
+          if (ledPos < N_LEDS - AndXMinutes_SIZE) continue;
         }
+        if (ledPos >= N_LEDS) continue;
         if (x <= rowIndex && x > rowIndex - cornerWipeWidth) {
             strip.setPixelColor(ledPos, Wheel((((y * 255) / CLOCK_HEIGHT) + colorIndex) & 255));
         } else {

@@ -103,11 +103,11 @@ int Birthdays[NumberOfBirthdays][4] = {
 };
 bool ShowBirthdayMsg;
 
-const int NumberOfAnniversaries = 3;
+const int NumberOfAnniversaries = 2;
 int Anniversaries[][4] = {
   {26, 1, 20, 0},
   {30, 11, 0, 0},
-  {27, 1, 1, 15},
+  // {27, 1, 1, 15},
 };
 bool ShowAnniversaryMsg;
 
@@ -256,7 +256,7 @@ void StartUp() {
     GetBrightnessValue();
     delay(5);
   }
-  strip.setBrightness(50); // TODO: remove this when brightness dimmer is connected
+  
   CornerWipe(DelayInterval, 3, false);
 }
 
@@ -591,11 +591,11 @@ void GetBrightnessValue() {
   if (currentBrightness < 1)
     currentBrightness = 1;
   
-  if (currentBrightness != pastBrightness)
+  if (TooDifferent(currentBrightness, pastBrightness))
     stripUpdated = true;
 }
 
-void GetColorValue() {
+void GetColorValue() { // TODO: figure out why it dims below green
   colorTotal = colorTotal - colorReadings[colorReadIndex];
   colorReadings[colorReadIndex] = analogRead(COLOR);
   colorTotal = colorTotal + colorReadings[colorReadIndex];
@@ -608,7 +608,7 @@ void GetColorValue() {
   floatColorValue = (colorAverage / 1023.0) * 255.0;
   currentWordsColor = 255 - (int)floatColorValue;
   
-  if (currentWordsColor != pastWordsColor)
+  if (TooDifferent(currentWordsColor, pastWordsColor))
     stripUpdated = true;
 }
 

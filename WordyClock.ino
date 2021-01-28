@@ -99,7 +99,7 @@ const int NumberOfBirthdays = 3;
 int Birthdays[NumberOfBirthdays][4] = {
   {26, 1, 0, 0},
   {24, 8, 0, 0},
-  {21, 1, 0, 0},
+  {28, 1, 10, 14},
 };
 bool ShowBirthdayMsg;
 
@@ -175,6 +175,8 @@ bool previousEnableState, currentEnableState;
 
 void setup() {
   Serial.begin(9600);
+
+  randomSeed(analogRead(2));
 
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
@@ -257,6 +259,7 @@ void StartUp() {
     delay(5);
   }
   
+  RainAnimation(strip.Color(0, 255, 0));
   CornerWipe(DelayInterval, 3, false);
 }
 
@@ -266,6 +269,45 @@ void Shutdown() {
   ClearStrip();
   strip.show();
   digitalWrite(LED_POWER, LOW);
+}
+
+void SetupWords() {
+  IndeciesFromMatrix(Its,   Its_SIZE,   0, 2, 0, 0);
+  
+  IndeciesFromMatrix(Happy,       Happy_SIZE,       7, 11, 1,  1);
+  IndeciesFromMatrix(Birth,       Birth_SIZE,       7, 11, 4,  4);
+  IndeciesFromMatrix(Day,         Day_SIZE,         7, 9,  7,  7);
+  IndeciesFromMatrix(And,         And_SIZE,         11,11, 7,  7);
+  IndeciesFromMatrix(Anniversary, Anniversary_SIZE, 1, 11, 10, 10);
+
+  IndeciesFromMatrix(FiveMin,   FiveMin_SIZE,   1, 4 , 2, 2);
+  IndeciesFromMatrix(TenMin,    TenMin_SIZE,    8, 10, 0, 0);
+  IndeciesFromMatrix(TwentyMin, TwentyMin_SIZE, 0, 5,  1, 1);
+  IndeciesFromMatrix(Minutes,   Minutes_SIZE,   0, 6,  3, 3);
+
+  IndeciesFromMatrix(Half,    Half_SIZE,    4, 7,  0, 0);
+  IndeciesFromMatrix(A,       A_SIZE,       5, 5,  0, 0);
+  IndeciesFromMatrix(Quarter, Quarter_SIZE, 5, 11, 2, 2);
+
+  IndeciesFromMatrix(To,   To_SIZE,   8, 9, 3, 3);
+  IndeciesFromMatrix(Past, Past_SIZE, 2, 5, 4, 4);
+
+  IndeciesFromMatrix(One,      One_SIZE,      6, 8,  5,  5);
+  IndeciesFromMatrix(Two,      Two_SIZE,      9, 11, 5,  5);
+  IndeciesFromMatrix(Three,    Three_SIZE,    0, 4 , 5,  5);
+  IndeciesFromMatrix(Four,     Four_SIZE,     4, 7,  6,  6);
+  IndeciesFromMatrix(Five,     Five_SIZE,     8, 11, 6,  6);
+  IndeciesFromMatrix(Six,      Six_SIZE,      9, 11, 8,  8);
+  IndeciesFromMatrix(Seven,    Seven_SIZE,    0, 4,  8,  8);
+  IndeciesFromMatrix(Eight,    Eight_SIZE,    0, 4,  11, 11);
+  IndeciesFromMatrix(Nine,     Nine_SIZE,     5, 8,  8,  8);
+  IndeciesFromMatrix(Ten,      Ten_SIZE,      9, 11, 9,  9);
+  IndeciesFromMatrix(Eleven,   Eleven_SIZE,   0, 5,  7,  7);
+  IndeciesFromMatrix(Noon,     Noon_SIZE,     0, 3,  6,  6);
+  IndeciesFromMatrix(Midnight, Midnight_SIZE, 0, 7,  9,  9);
+
+  IndeciesFromMatrix(Oclock,      Oclock_SIZE,      6, 11, 11, 11);
+  IndeciesFromMatrix(AndXMinutes, AndXMinutes_SIZE, 8, 11, 12, 12);
 }
 
 void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart, int yEnd) {
@@ -317,78 +359,6 @@ int IndexFromCoordinates(int x, int y) {
     }
   }
   return index;
-}
-
-void SetupWords() {
-  IndeciesFromMatrix(Its,   Its_SIZE,   0, 2, 0, 0);
-  
-  IndeciesFromMatrix(Happy,       Happy_SIZE,       7, 11, 1,  1);
-  IndeciesFromMatrix(Birth,       Birth_SIZE,       7, 11, 4,  4);
-  IndeciesFromMatrix(Day,         Day_SIZE,         7, 9,  7,  7);
-  IndeciesFromMatrix(And,         And_SIZE,         11,11, 7,  7);
-  IndeciesFromMatrix(Anniversary, Anniversary_SIZE, 1, 11, 10, 10);
-
-  IndeciesFromMatrix(FiveMin,   FiveMin_SIZE,   1, 4 , 2, 2);
-  IndeciesFromMatrix(TenMin,    TenMin_SIZE,    8, 10, 0, 0);
-  IndeciesFromMatrix(TwentyMin, TwentyMin_SIZE, 0, 5,  1, 1);
-  IndeciesFromMatrix(Minutes,   Minutes_SIZE,   0, 6,  3, 3);
-
-  IndeciesFromMatrix(Half,    Half_SIZE,    4, 7,  0, 0);
-  IndeciesFromMatrix(A,       A_SIZE,       5, 5,  0, 0);
-  IndeciesFromMatrix(Quarter, Quarter_SIZE, 5, 11, 2, 2);
-
-  IndeciesFromMatrix(To,   To_SIZE,   8, 9, 3, 3);
-  IndeciesFromMatrix(Past, Past_SIZE, 2, 5, 4, 4);
-
-  IndeciesFromMatrix(One,      One_SIZE,      6, 8,  5,  5);
-  IndeciesFromMatrix(Two,      Two_SIZE,      9, 11, 5,  5);
-  IndeciesFromMatrix(Three,    Three_SIZE,    0, 4 , 5,  5);
-  IndeciesFromMatrix(Four,     Four_SIZE,     4, 7,  6,  6);
-  IndeciesFromMatrix(Five,     Five_SIZE,     8, 11, 6,  6);
-  IndeciesFromMatrix(Six,      Six_SIZE,      9, 11, 8,  8);
-  IndeciesFromMatrix(Seven,    Seven_SIZE,    0, 4,  8,  8);
-  IndeciesFromMatrix(Eight,    Eight_SIZE,    0, 4,  11, 11);
-  IndeciesFromMatrix(Nine,     Nine_SIZE,     5, 8,  8,  8);
-  IndeciesFromMatrix(Ten,      Ten_SIZE,      9, 11, 9,  9);
-  IndeciesFromMatrix(Eleven,   Eleven_SIZE,   0, 5,  7,  7);
-  IndeciesFromMatrix(Noon,     Noon_SIZE,     0, 3,  6,  6);
-  IndeciesFromMatrix(Midnight, Midnight_SIZE, 0, 7,  9,  9);
-
-  IndeciesFromMatrix(Oclock,      Oclock_SIZE,      6, 11, 11, 11);
-  IndeciesFromMatrix(AndXMinutes, AndXMinutes_SIZE, 8, 11, 12, 12);
-}
-
-void ClearStrip() {
-  for (int i = 0; i < N_LEDS; i++) {
-    LEDS[i] = false;
-  }
-  strip.clear();
-}
-
-void UpdateTime() {
-  DateTime now = rtc.now();
-  rtc.adjust(DateTime(now + TimeSpan(0, hourOffset, minuteOffset, -now.second())));
-  hourOffset = 0;
-  minuteOffset = 0;
-}
-
-bool CheckEvent(int dates[][4], int numDates, int minOffset) {
-  DateTime now = rtc.now();
-  for (int i = 0; i < numDates; i++) {
-    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour()) {
-      if ((minOffset == 0 && dates[i][3] <= now.minute()) || (minOffset > 0 && dates[i][3] - minOffset == now.minute())) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-bool TooDifferent(int a, int b) {
-  if (a - b > 1 || b - a > 1) {
-    return true;
-  }
-  return false;
 }
 
 void SetTime(bool force){
@@ -508,6 +478,68 @@ void SetTime(bool force){
   }
 }
 
+void GetBrightnessValue() {
+  dimmerTotal = dimmerTotal - dimmerReadings[dimmerReadIndex];
+  dimmerReadings[dimmerReadIndex] = analogRead(DIMMER);
+  dimmerTotal = dimmerTotal + dimmerReadings[dimmerReadIndex];
+  
+  dimmerReadIndex = dimmerReadIndex + 1;
+  if (dimmerReadIndex >= numReadings)
+    dimmerReadIndex = 0;
+  
+  dimmerAverage = dimmerTotal / numReadings;
+  floatBrightnessValue = (dimmerAverage / 1023.0) * 255.0;
+  currentBrightness = 255 - (int)floatBrightnessValue;
+  currentBrightness = 100; // TODO: remove this once dimmer is connected
+  
+  if (currentBrightness < 1)
+    currentBrightness = 1;
+  
+  if (TooDifferent(currentBrightness, pastBrightness))
+    stripUpdated = true;
+}
+
+void GetColorValue() {
+  colorTotal = colorTotal - colorReadings[colorReadIndex];
+  colorReadings[colorReadIndex] = analogRead(COLOR);
+  colorTotal = colorTotal + colorReadings[colorReadIndex];
+  
+  colorReadIndex = colorReadIndex + 1;
+  if (colorReadIndex >= numReadings)
+    colorReadIndex = 0;
+  
+  colorAverage = colorTotal / numReadings;
+  floatColorValue = (colorAverage / 1023.0) * 255.0;
+  currentWordsColor = 255 - (int)floatColorValue;
+  
+  if (TooDifferent(currentWordsColor, pastWordsColor))
+    stripUpdated = true;
+}
+
+void UpdateTime() {
+  DateTime now = rtc.now();
+  rtc.adjust(DateTime(now + TimeSpan(0, hourOffset, minuteOffset, -now.second())));
+  hourOffset = 0;
+  minuteOffset = 0;
+}
+
+ISR(PCINT0_vect) {
+  unsigned char hourResult = hourRotary.process();
+  if (hourResult == DIR_CW) {
+    hourOffset++;
+  }
+  else if (hourResult == DIR_CCW) {
+    hourOffset--;
+  }
+  unsigned char minuteResult = minuteRotary.process();
+  if (minuteResult == DIR_CW) {
+    minuteOffset++;
+  }
+  else if (minuteResult == DIR_CCW) {
+    minuteOffset--;
+  }
+}
+
 void TurnOn(int* wordArray, int wordArray_SIZE) {
   if (currentWordsColor >= 254) {
     for(int i = 0; i < wordArray_SIZE; i++) {
@@ -527,6 +559,42 @@ void TurnOff(int* wordArray, int wordArray_SIZE) {
     strip.setPixelColor(wordArray[i], strip.Color(0, 0, 0));
     LEDS[wordArray[i]] = false;
   }
+}
+
+void ClearStrip() {
+  for (int i = 0; i < N_LEDS; i++) {
+    LEDS[i] = false;
+  }
+  strip.clear();
+}
+
+bool CheckEvent(int dates[][4], int numDates, int minOffset) {
+  DateTime now = rtc.now();
+  for (int i = 0; i < numDates; i++) {
+    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour()) {
+      if ((minOffset == 0 && dates[i][3] <= now.minute()) || (minOffset > 0 && dates[i][3] - minOffset == now.minute() && dates[i][2] == now.hour())) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool StartCountdown(int counter) {
+  DateTime now = rtc.now();
+  if (CheckEvent(Birthdays, NumberOfBirthdays, 1) || CheckEvent(Anniversaries, NumberOfAnniversaries, 1)) {
+    if (now.second() == (60 - counter)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool TooDifferent(int a, int b) {
+  if (a - b > 1 || b - a > 1) {
+    return true;
+  }
+  return false;
 }
 
 void RainbowCycle(bool birthday, bool anniversary) {
@@ -573,44 +641,6 @@ void RainbowCycle(bool birthday, bool anniversary) {
   }
   
   rainbowColorIndex--;
-}
-
-void GetBrightnessValue() {
-  dimmerTotal = dimmerTotal - dimmerReadings[dimmerReadIndex];
-  dimmerReadings[dimmerReadIndex] = analogRead(DIMMER);
-  dimmerTotal = dimmerTotal + dimmerReadings[dimmerReadIndex];
-  
-  dimmerReadIndex = dimmerReadIndex + 1;
-  if (dimmerReadIndex >= numReadings)
-    dimmerReadIndex = 0;
-  
-  dimmerAverage = dimmerTotal / numReadings;
-  floatBrightnessValue = (dimmerAverage / 1023.0) * 255.0;
-  currentBrightness = 255 - (int)floatBrightnessValue;
-  currentBrightness = 255; // TODO: remove this once dimmer is connected
-  
-  if (currentBrightness < 1)
-    currentBrightness = 1;
-  
-  if (TooDifferent(currentBrightness, pastBrightness))
-    stripUpdated = true;
-}
-
-void GetColorValue() {
-  colorTotal = colorTotal - colorReadings[colorReadIndex];
-  colorReadings[colorReadIndex] = analogRead(COLOR);
-  colorTotal = colorTotal + colorReadings[colorReadIndex];
-  
-  colorReadIndex = colorReadIndex + 1;
-  if (colorReadIndex >= numReadings)
-    colorReadIndex = 0;
-  
-  colorAverage = colorTotal / numReadings;
-  floatColorValue = (colorAverage / 1023.0) * 255.0;
-  currentWordsColor = 255 - (int)floatColorValue;
-  
-  if (TooDifferent(currentWordsColor, pastWordsColor))
-    stripUpdated = true;
 }
 
 uint32_t Wheel(int wheelPos) {
@@ -684,23 +714,6 @@ void CornerWipe(unsigned long wait, int cornerWipeWidth, bool wipe) {
   }
 }
 
-ISR(PCINT0_vect) {
-  unsigned char hourResult = hourRotary.process();
-  if (hourResult == DIR_CW) {
-    hourOffset++;
-  }
-  else if (hourResult == DIR_CCW) {
-    hourOffset--;
-  }
-  unsigned char minuteResult = minuteRotary.process();
-  if (minuteResult == DIR_CW) {
-    minuteOffset++;
-  }
-  else if (minuteResult == DIR_CCW) {
-    minuteOffset--;
-  }
-}
-
 void DisplayDigit(int digit, int offsetX, int offsetY, uint32_t color, bool overlay) {
   for (int i = 0; i < DigitsDisplay_WIDTH; i++) {
     for (int j = 0; j < DigitsDisplay_HEIGHT; j++) {
@@ -722,16 +735,6 @@ void DisplayDigit(int digit, int offsetX, int offsetY, uint32_t color, bool over
       }
     }
   }
-}
-
-bool StartCountdown(int counter) {
-  DateTime now = rtc.now();
-  if (CheckEvent(Birthdays, NumberOfBirthdays, 1) || CheckEvent(Anniversaries, NumberOfAnniversaries, 1)) {
-    if (now.second() == (60 - counter)) {
-      return true;
-    }
-  }
-  return false;
 }
 
 void RainbowCountdown(unsigned long wait, int counter) {
@@ -784,5 +787,83 @@ void TheaterChaseCountdown(unsigned long wait, int counter, uint32_t color, uint
         delay(wait);
       }
     }
+  }
+}
+
+const int BeamLength = 11;
+
+const int BeamSpeeds = 3;
+int BeamSpeed[BeamSpeeds] = {0, 1, 2};
+
+void RainAnimation(uint32_t color) {
+
+  int pixels[CLOCK_WIDTH][CLOCK_HEIGHT-1];
+  int beamDelay[CLOCK_WIDTH];
+  int beamDelayTracker[CLOCK_WIDTH];
+  for(int i=0; i<CLOCK_WIDTH; i++) {
+    beamDelay[i] = BeamSpeed[random(BeamSpeeds)];
+    beamDelayTracker[i] = beamDelay[i];
+    for(int j=0; j<CLOCK_HEIGHT-1; j++) {
+      pixels[i][j] = 0;
+    }
+  }
+
+  int frameCount = 0;
+  while(frameCount < 200) {
+
+    frameCount++;
+    ClearStrip();
+
+    for(int column=CLOCK_WIDTH-1; column>=0; column--) {
+      for(int row=CLOCK_HEIGHT-2; row>=0; row--) {
+
+
+        bool newBeam = false;
+        if (row == 0 && pixels[column][row] < BeamLength) {
+          if (random(100) > 95) {
+            newBeam = true;
+            pixels[column][row] = BeamLength;
+          }
+        }
+
+        if (beamDelayTracker[column] > 0) {
+          beamDelayTracker[column]--;
+          break;
+        }
+        beamDelayTracker[column] = beamDelay[column];
+
+        if (!newBeam){
+          if (pixels[column][row] > 0 && pixels[column][row] < BeamLength) {
+            pixels[column][row]--;
+          }
+          if (pixels[column][row] == BeamLength) {
+            pixels[column][row]--;
+            if (row+1 < CLOCK_HEIGHT-1) {
+              pixels[column][row+1] = BeamLength;
+            }
+          }
+        }
+      }
+    }
+
+    for(int column=0; column<CLOCK_WIDTH; column++) {
+      for(int row=0; row<CLOCK_HEIGHT-1; row++) {
+
+        int index = IndexFromCoordinates(column, row);
+
+        if (pixels[column][row] == BeamLength) {
+          // strip.setPixelColor(index, 0, 0, 0);
+          strip.setPixelColor(index, 128, 128, 128);
+        } else if (pixels[column][row] > 0) {
+          // strip.setPixelColor(index, 0, 0, (255*pixels[column][row]/BeamLength));
+          strip.setPixelColor(index, 0, (255*pixels[column][row]/BeamLength), 0);
+        } else {
+          strip.setPixelColor(index, 0, 0, 0);
+        }
+      }
+    }
+
+    strip.show();
+    delay(50);
   }
 }

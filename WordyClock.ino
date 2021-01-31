@@ -259,7 +259,7 @@ void StartUp() {
     delay(5);
   }
   
-  RainAnimation(40, 80, 11, 100, MatrixPrinter);
+  RainAnimation(30, 80, 11, 50, SunriseRainPrinter);
   CornerWipe(DelayInterval, 3, false);
 }
 
@@ -502,6 +502,7 @@ void GetBrightnessValue() {
 void GetColorValue() {
   colorTotal = colorTotal - colorReadings[colorReadIndex];
   colorReadings[colorReadIndex] = analogRead(COLOR);
+  // Serial.println(colorReadings[colorReadIndex]);
   colorTotal = colorTotal + colorReadings[colorReadIndex];
   
   colorReadIndex = colorReadIndex + 1;
@@ -511,6 +512,7 @@ void GetColorValue() {
   colorAverage = colorTotal / numReadings;
   floatColorValue = (colorAverage / 1023.0) * 255.0;
   currentWordsColor = 255 - (int)floatColorValue;
+  // Serial.println(currentWordsColor);
   
   if (TooDifferent(currentWordsColor, pastWordsColor))
     stripUpdated = true;
@@ -828,13 +830,7 @@ void RainPrinter(int pixelValue, int index, int beamID, int beamLength) {
 
 void SunsetRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
   int sunsetColors = 5;
-  int sunsetColor[][3] = {
-    {238, 175, 97},
-    {251, 144, 98},
-    {238, 93,  108},
-    {206, 73,  147},
-    {106, 13,  131},
-  };
+  uint32_t sunsetColor[5] = {Wheel(14), Wheel(23), Wheel(34), Wheel(196), Wheel(214)};
   int i = 0; // TODO: psuedo-randomize index
   if (beamID > sunsetColors) {
     i = beamID % sunsetColors;
@@ -842,29 +838,23 @@ void SunsetRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
     i = sunsetColors % beamID;
   }
   if (pixelValue > 0) {
-    strip.setPixelColor(index, sunsetColor[i][0], sunsetColor[i][1], sunsetColor[i][2]);
+    strip.setPixelColor(index, sunsetColor[i]);
   } else {
     strip.setPixelColor(index, 0, 0, 0);
   }
 }
 
 void SunriseRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
-  int sunsetColors = 5;
-  int sunsetColor[][3] = {
-    {71,  81,  189},
-    {75,  128, 183},
-    {54,  191, 192},
-    {245, 137, 69},
-    {255, 202, 53},
-  };
+  int sunriseColors = 6;
+  uint32_t sunriseColor[6] = {Wheel(193), Wheel(187), Wheel(126), Wheel(40), Wheel(32), Wheel(21)};
   int i = 0; // TODO: psuedo-randomize index
-  if (beamID > sunsetColors) {
-    i = beamID % sunsetColors;
+  if (beamID > sunriseColors) {
+    i = beamID % sunriseColors;
   } else {
-    i = sunsetColors % beamID;
+    i = sunriseColors % beamID;
   }
   if (pixelValue > 0) {
-    strip.setPixelColor(index, sunsetColor[i][0], sunsetColor[i][1], sunsetColor[i][2]);
+    strip.setPixelColor(index, sunriseColor[i]);
   } else {
     strip.setPixelColor(index, 0, 0, 0);
   }
@@ -879,7 +869,7 @@ void SnowPrinter(int pixelValue, int index, int beamID, int beamLength) {
 }
 
 const int RainSpeed_SIZE = 5;
-int RainSpeed[RainSpeed_SIZE] = {0, 0, 1, 2, 4};
+int RainSpeed[RainSpeed_SIZE] = {0, 0, 1, 2, 2};
 
 void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int maxBeamCount, void(*printRain)(int, int, int, int)) {
 
@@ -888,11 +878,13 @@ void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int 
   int pixels[width][height];
   int beamDelay[width];
   int beamDelayTracker[width];
+  int beamID[width];
   bool beamDropping[width];
   for(int i=0; i<width; i++) {
     beamDelay[i] = RainSpeed[random(RainSpeed_SIZE)];
     beamDelayTracker[i] = beamDelay[i];
     beamDropping[i] = false;
+    beamID[i] = 0;
     for(int j=0; j<height; j++) {
       pixels[i][j] = 0;
     }
@@ -913,6 +905,7 @@ void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int 
             pixels[column][row] = beamLength;
             beamDropping[column] = true;
             beamCount++;
+            beamID[column] = beamCount;
           }
         }
         if (pixels[column][row] > 0) {
@@ -949,7 +942,7 @@ void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int 
     for(int column=0; column<width; column++) {
       for(int row=0; row<height; row++) {
         int index = IndexFromCoordinates(column, row);
-        printRain(pixels[column][row], index, column+1, beamLength);
+        printRain(pixels[column][row], index, beamID[column], beamLength);
       }
     }
     strip.show();

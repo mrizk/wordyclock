@@ -259,7 +259,7 @@ void StartUp() {
     delay(5);
   }
   
-  RainAnimation(strip.Color(0, 255, 0));
+  RainAnimation(40, 80, 11, 100, MatrixPrinter);
   CornerWipe(DelayInterval, 3, false);
 }
 
@@ -650,14 +650,32 @@ uint32_t Wheel(int wheelPos) {
   int threshold2 = 170;
   
   if (wheelPos < threshold1) {
+    // Serial.print(255 - wheelPos * 3);
+    // Serial.print(", ");
+    // Serial.print(0);
+    // Serial.print(", ");
+    // Serial.print(wheelPos * 3);
+    // Serial.println("");
     return strip.Color(255 - wheelPos * 3, 0, wheelPos * 3);
   }
   else if (wheelPos < threshold2) {
     wheelPos -= threshold1;
+    // Serial.print(0);
+    // Serial.print(", ");
+    // Serial.print(wheelPos * 3);
+    // Serial.print(", ");
+    // Serial.print(255 - wheelPos * 3);
+    // Serial.println("");
     return strip.Color(0, wheelPos * 3, 255 - wheelPos * 3);
   }
   else {
     wheelPos -= threshold2;
+    // Serial.print(wheelPos * 3);
+    // Serial.print(", ");
+    // Serial.print(255 - wheelPos * 3);
+    // Serial.print(", ");
+    // Serial.print(0);
+    // Serial.println("");
     return strip.Color(wheelPos * 3, 255 - wheelPos * 3, 0);
   }
 }
@@ -790,80 +808,151 @@ void TheaterChaseCountdown(unsigned long wait, int counter, uint32_t color, uint
   }
 }
 
-const int BeamLength = 11;
+void MatrixPrinter(int pixelValue, int index, int beamID, int beamLength) {
+  if (pixelValue == beamLength) {
+    strip.setPixelColor(index, 128, 128, 128);
+  } else if (pixelValue > 0) {
+    strip.setPixelColor(index, 0, (255*pixelValue/beamLength), 0);
+  } else {
+    strip.setPixelColor(index, 0, 0, 0);
+  }
+}
 
-const int BeamSpeeds = 3;
-int BeamSpeed[BeamSpeeds] = {0, 1, 2};
+void RainPrinter(int pixelValue, int index, int beamID, int beamLength) {
+  if (pixelValue > 0) {
+    strip.setPixelColor(index, 0, 0, (255*pixelValue/beamLength));
+  } else {
+    strip.setPixelColor(index, 0, 0, 0);
+  }
+}
 
-void RainAnimation(uint32_t color) {
+void SunsetRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
+  int sunsetColors = 5;
+  int sunsetColor[][3] = {
+    {238, 175, 97},
+    {251, 144, 98},
+    {238, 93,  108},
+    {206, 73,  147},
+    {106, 13,  131},
+  };
+  int i = 0; // TODO: psuedo-randomize index
+  if (beamID > sunsetColors) {
+    i = beamID % sunsetColors;
+  } else {
+    i = sunsetColors % beamID;
+  }
+  if (pixelValue > 0) {
+    strip.setPixelColor(index, sunsetColor[i][0], sunsetColor[i][1], sunsetColor[i][2]);
+  } else {
+    strip.setPixelColor(index, 0, 0, 0);
+  }
+}
 
-  int pixels[CLOCK_WIDTH][CLOCK_HEIGHT-1];
-  int beamDelay[CLOCK_WIDTH];
-  int beamDelayTracker[CLOCK_WIDTH];
-  for(int i=0; i<CLOCK_WIDTH; i++) {
-    beamDelay[i] = BeamSpeed[random(BeamSpeeds)];
+void SunriseRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
+  int sunsetColors = 5;
+  int sunsetColor[][3] = {
+    {71,  81,  189},
+    {75,  128, 183},
+    {54,  191, 192},
+    {245, 137, 69},
+    {255, 202, 53},
+  };
+  int i = 0; // TODO: psuedo-randomize index
+  if (beamID > sunsetColors) {
+    i = beamID % sunsetColors;
+  } else {
+    i = sunsetColors % beamID;
+  }
+  if (pixelValue > 0) {
+    strip.setPixelColor(index, sunsetColor[i][0], sunsetColor[i][1], sunsetColor[i][2]);
+  } else {
+    strip.setPixelColor(index, 0, 0, 0);
+  }
+}
+
+void SnowPrinter(int pixelValue, int index, int beamID, int beamLength) {
+  if (pixelValue == beamLength) {
+    strip.setPixelColor(index, 128, 128, 128);
+  } else {
+    strip.setPixelColor(index, 0, 0, 0);
+  }
+}
+
+const int RainSpeed_SIZE = 5;
+int RainSpeed[RainSpeed_SIZE] = {0, 0, 1, 2, 4};
+
+void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int maxBeamCount, void(*printRain)(int, int, int, int)) {
+
+  int width = CLOCK_WIDTH;
+  int height = CLOCK_HEIGHT - 1;
+  int pixels[width][height];
+  int beamDelay[width];
+  int beamDelayTracker[width];
+  bool beamDropping[width];
+  for(int i=0; i<width; i++) {
+    beamDelay[i] = RainSpeed[random(RainSpeed_SIZE)];
     beamDelayTracker[i] = beamDelay[i];
-    for(int j=0; j<CLOCK_HEIGHT-1; j++) {
+    beamDropping[i] = false;
+    for(int j=0; j<height; j++) {
       pixels[i][j] = 0;
     }
   }
 
-  int frameCount = 0;
-  while(frameCount < 200) {
+  int beamCount = 0;
+  bool allBeamsDone = false;
+  while(beamCount <= maxBeamCount && !allBeamsDone) {
+    allBeamsDone = true;
 
-    frameCount++;
-    ClearStrip();
-
-    for(int column=CLOCK_WIDTH-1; column>=0; column--) {
-      for(int row=CLOCK_HEIGHT-2; row>=0; row--) {
-
-
+    for(int column=0; column<width; column++) {
+      bool emptyColumn = true;
+      for(int row=height-1; row>=0; row--) {
         bool newBeam = false;
-        if (row == 0 && pixels[column][row] < BeamLength) {
-          if (random(100) > 95) {
+        if (row == 0 && !beamDropping[column] && beamCount < maxBeamCount) {
+          if (random(100) >= rainProbability) {
             newBeam = true;
-            pixels[column][row] = BeamLength;
+            pixels[column][row] = beamLength;
+            beamDropping[column] = true;
+            beamCount++;
           }
         }
-
-        if (beamDelayTracker[column] > 0) {
-          beamDelayTracker[column]--;
-          break;
+        if (pixels[column][row] > 0) {
+          emptyColumn = false;
         }
-        beamDelayTracker[column] = beamDelay[column];
-
+        if (pixels[column][row] == beamLength) {
+          if (beamDelayTracker[column] >= 0) {
+            beamDelayTracker[column]--;
+            break;
+          }
+          beamDelayTracker[column] = beamDelay[column];
+        }
         if (!newBeam){
-          if (pixels[column][row] > 0 && pixels[column][row] < BeamLength) {
+          if (pixels[column][row] > 0 && pixels[column][row] < beamLength) {
             pixels[column][row]--;
           }
-          if (pixels[column][row] == BeamLength) {
-            pixels[column][row]--;
-            if (row+1 < CLOCK_HEIGHT-1) {
-              pixels[column][row+1] = BeamLength;
+          if (pixels[column][row] == beamLength) {
+            if (row+1 < height) {
+              pixels[column][row+1] = pixels[column][row];
             }
+            pixels[column][row]--;
           }
         }
       }
-    }
-
-    for(int column=0; column<CLOCK_WIDTH; column++) {
-      for(int row=0; row<CLOCK_HEIGHT-1; row++) {
-
-        int index = IndexFromCoordinates(column, row);
-
-        if (pixels[column][row] == BeamLength) {
-          // strip.setPixelColor(index, 0, 0, 0);
-          strip.setPixelColor(index, 128, 128, 128);
-        } else if (pixels[column][row] > 0) {
-          // strip.setPixelColor(index, 0, 0, (255*pixels[column][row]/BeamLength));
-          strip.setPixelColor(index, 0, (255*pixels[column][row]/BeamLength), 0);
-        } else {
-          strip.setPixelColor(index, 0, 0, 0);
-        }
+      
+      if (emptyColumn) {
+        beamDropping[column] = false;
+        beamDelay[column] = RainSpeed[random(RainSpeed_SIZE)];
+      } else {
+        allBeamsDone = false;
       }
     }
 
+    for(int column=0; column<width; column++) {
+      for(int row=0; row<height; row++) {
+        int index = IndexFromCoordinates(column, row);
+        printRain(pixels[column][row], index, column+1, beamLength);
+      }
+    }
     strip.show();
-    delay(50);
+    delay(wait);
   }
 }

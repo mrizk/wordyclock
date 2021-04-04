@@ -23,7 +23,7 @@
 #define CLOCK_HEIGHT 13
 #define CLOCK_ORIGIN ORIGIN_TOP_RIGHT
 
-bool LEDS[CLOCK_WIDTH * CLOCK_HEIGHT];
+bool LEDS[N_LEDS];
 
 const int Its_SIZE = 3;
 int Its[Its_SIZE];
@@ -134,7 +134,6 @@ int dimmerReadings[numReadings];
 int dimmerReadIndex = 0;
 int dimmerTotal = 0;
 int dimmerAverage = 0;
-int brightnessValue = 0;
 float floatBrightnessValue = 0.0;
 int pastBrightness = 0;
 int currentBrightness = 0;
@@ -143,10 +142,9 @@ int colorReadings[numReadings];
 int colorReadIndex = 0;
 int colorTotal = 0;
 int colorAverage = 0;
-int currentWordsColor = 0;
 float floatColorValue = 0.0;
+int currentWordsColor = 0;
 int pastWordsColor = 0;
-int colorValue = 0;
 
 int rainbowColorIndex = 255;
 
@@ -259,7 +257,7 @@ void StartUp() {
     delay(5);
   }
   
-  RainAnimation(30, 80, 11, 50, SunriseRainPrinter);
+  RainAnimation(30, 80, 11, 50, MatrixPrinter);
   CornerWipe(DelayInterval, 3, false);
 }
 
@@ -544,12 +542,12 @@ ISR(PCINT0_vect) {
 
 void TurnOn(int* wordArray, int wordArray_SIZE) {
   if (currentWordsColor >= 254) {
-    for(int i = 0; i < wordArray_SIZE; i++) {
+    for (int i = 0; i < wordArray_SIZE; i++) {
       strip.setPixelColor(wordArray[i], 255, 255, 255);
       LEDS[wordArray[i]] = true;
     }
   } else {
-    for(int i = 0; i < wordArray_SIZE; i++) {
+    for (int i = 0; i < wordArray_SIZE; i++) {
       strip.setPixelColor(wordArray[i], Wheel(currentWordsColor));
       LEDS[wordArray[i]] = true;
     }
@@ -557,7 +555,7 @@ void TurnOn(int* wordArray, int wordArray_SIZE) {
 }
 
 void TurnOff(int* wordArray, int wordArray_SIZE) {
-  for(int i = 0; i < wordArray_SIZE; i++) {
+  for (int i = 0; i < wordArray_SIZE; i++) {
     strip.setPixelColor(wordArray[i], strip.Color(0, 0, 0));
     LEDS[wordArray[i]] = false;
   }
@@ -612,31 +610,31 @@ void RainbowCycle(bool birthday, bool anniversary) {
   }
 
   int colorIndex;
-  for(int i = 0; i < Happy_SIZE; i++) {
+  for (int i = 0; i < Happy_SIZE; i++) {
     strip.setPixelColor(Happy[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
     colorIndex++;
   }
 
   if (birthday) {
-    for(int i = 0; i < Birth_SIZE; i++) {
+    for (int i = 0; i < Birth_SIZE; i++) {
       strip.setPixelColor(Birth[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
       colorIndex++;
     }
-    for(int i = 0; i < Day_SIZE; i++) {
+    for (int i = 0; i < Day_SIZE; i++) {
       strip.setPixelColor(Day[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
       colorIndex++;
     }
   }
 
   if (birthday && anniversary) {
-    for(int i = 0; i < And_SIZE; i++) {
+    for (int i = 0; i < And_SIZE; i++) {
       strip.setPixelColor(And[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
       colorIndex++;
     }
   }
 
   if (anniversary) {
-    for(int i = 0; i < Anniversary_SIZE; i++) {
+    for (int i = 0; i < Anniversary_SIZE; i++) {
       strip.setPixelColor(Anniversary[i], Wheel(((colorIndex * 255 / totalSize) + rainbowColorIndex) & 255));
       colorIndex++;
     }
@@ -651,35 +649,32 @@ uint32_t Wheel(int wheelPos) {
   int threshold1 = 85;
   int threshold2 = 170;
   
+  int r, g, b;
+
   if (wheelPos < threshold1) {
-    // Serial.print(255 - wheelPos * 3);
-    // Serial.print(", ");
-    // Serial.print(0);
-    // Serial.print(", ");
-    // Serial.print(wheelPos * 3);
-    // Serial.println("");
-    return strip.Color(255 - wheelPos * 3, 0, wheelPos * 3);
+    r = 255 - wheelPos * 3;
+    g = 0;
+    b = wheelPos * 3;
   }
   else if (wheelPos < threshold2) {
     wheelPos -= threshold1;
-    // Serial.print(0);
-    // Serial.print(", ");
-    // Serial.print(wheelPos * 3);
-    // Serial.print(", ");
-    // Serial.print(255 - wheelPos * 3);
-    // Serial.println("");
-    return strip.Color(0, wheelPos * 3, 255 - wheelPos * 3);
+    r = 0;
+    g = wheelPos * 3;
+    b = 255 - wheelPos * 3;
   }
   else {
     wheelPos -= threshold2;
-    // Serial.print(wheelPos * 3);
-    // Serial.print(", ");
-    // Serial.print(255 - wheelPos * 3);
-    // Serial.print(", ");
-    // Serial.print(0);
-    // Serial.println("");
-    return strip.Color(wheelPos * 3, 255 - wheelPos * 3, 0);
+    r = wheelPos * 3;
+    g = 255 - wheelPos * 3;
+    b = 0;
   }
+  // Serial.print(r);
+  // Serial.print(", ");
+  // Serial.print(g);
+  // Serial.print(", ");
+  // Serial.print(b);
+  // Serial.println("");
+  return strip.Color(r, g, b);
 }
 
 void CornerWipe(unsigned long wait, int cornerWipeWidth, bool wipe) {
@@ -761,9 +756,9 @@ void RainbowCountdown(unsigned long wait, int counter) {
   countdownTimer = millis();
   uint32_t color = strip.Color(255, 255, 255);
   while (true) {
-    for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
-      for(int i=0; i<strip.numPixels(); i++) { 
-        int pixelHue = firstPixelHue + (i * 65536L / strip.numPixels());
+    for (long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
+      for (int i = 0; i < N_LEDS; i++) { 
+        int pixelHue = firstPixelHue + (i * 65536L / N_LEDS);
         strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(pixelHue)));
       }
       if (millis() - countdownTimer >= 1000) {
@@ -786,10 +781,10 @@ void RainbowCountdown(unsigned long wait, int counter) {
 void TheaterChaseCountdown(unsigned long wait, int counter, uint32_t color, uint32_t countdownColor) {
   countdownTimer = millis();
   while (true) {
-    for(int a=0; a<10; a++) { 
-      for(int b=0; b<3; b++) { 
+    for (int a = 0; a < 10; a++) { 
+      for (int b = 0; b < 3; b++) { 
         strip.clear();
-        for(int c=b; c<strip.numPixels(); c += 3) {
+        for (int c = b; c < N_LEDS; c += 3) {
           strip.setPixelColor(c, color);
         }
         if (millis() - countdownTimer >= 1000) {
@@ -831,7 +826,7 @@ void RainPrinter(int pixelValue, int index, int beamID, int beamLength) {
 void SunsetRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
   int sunsetColors = 5;
   uint32_t sunsetColor[5] = {Wheel(14), Wheel(23), Wheel(34), Wheel(196), Wheel(214)};
-  int i = 0; // TODO: psuedo-randomize index
+  int i = 0;
   if (beamID > sunsetColors) {
     i = beamID % sunsetColors;
   } else {
@@ -847,7 +842,7 @@ void SunsetRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
 void SunriseRainPrinter(int pixelValue, int index, int beamID, int beamLength) {
   int sunriseColors = 6;
   uint32_t sunriseColor[6] = {Wheel(193), Wheel(187), Wheel(126), Wheel(40), Wheel(32), Wheel(21)};
-  int i = 0; // TODO: psuedo-randomize index
+  int i = 0;
   if (beamID > sunriseColors) {
     i = beamID % sunriseColors;
   } else {
@@ -880,12 +875,12 @@ void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int 
   int beamDelayTracker[width];
   int beamID[width];
   bool beamDropping[width];
-  for(int i=0; i<width; i++) {
+  for (int i = 0; i < width; i++) {
     beamDelay[i] = RainSpeed[random(RainSpeed_SIZE)];
     beamDelayTracker[i] = beamDelay[i];
     beamDropping[i] = false;
     beamID[i] = 0;
-    for(int j=0; j<height; j++) {
+    for (int j = 0; j < height; j++) {
       pixels[i][j] = 0;
     }
   }
@@ -895,9 +890,9 @@ void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int 
   while(beamCount <= maxBeamCount && !allBeamsDone) {
     allBeamsDone = true;
 
-    for(int column=0; column<width; column++) {
+    for (int column = 0; column < width; column++) {
       bool emptyColumn = true;
-      for(int row=height-1; row>=0; row--) {
+      for (int row = height-1; row >= 0; row--) {
         bool newBeam = false;
         if (row == 0 && !beamDropping[column] && beamCount < maxBeamCount) {
           if (random(100) >= rainProbability) {
@@ -939,8 +934,8 @@ void RainAnimation(unsigned long wait, int rainProbability, int beamLength, int 
       }
     }
 
-    for(int column=0; column<width; column++) {
-      for(int row=0; row<height; row++) {
+    for (int column = 0; column < width; column++) {
+      for (int row = 0; row < height; row++) {
         int index = IndexFromCoordinates(column, row);
         printRain(pixels[column][row], index, beamID[column], beamLength);
       }

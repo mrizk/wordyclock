@@ -16,8 +16,6 @@
 
 #define ORIGIN_TOP_LEFT     0
 #define ORIGIN_TOP_RIGHT    1
-#define ORIGIN_BOTTOM_LEFT  2
-#define ORIGIN_BOTTOM_RIGHT 3
 
 #define CLOCK_WIDTH  12
 #define CLOCK_HEIGHT 13
@@ -314,16 +312,10 @@ void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart,
     if (y >= yStart && y <= yEnd){
       int yPos = y;
 
-      if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
-        yPos = CLOCK_HEIGHT - yPos;
-      }
-
       for (int x = 0; x < CLOCK_WIDTH; x++){
         if (x >= xStart && x <= xEnd){
           int xPos = x;
-          if ((CLOCK_ORIGIN == ORIGIN_TOP_RIGHT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) && y % 2 == 0){
-            xPos = (CLOCK_WIDTH - 1) - xPos;
-          } else if ((CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT) && y % 2 == 1){
+          if ((CLOCK_ORIGIN == ORIGIN_TOP_RIGHT && y % 2 == 0) || (CLOCK_ORIGIN == ORIGIN_TOP_LEFT && y % 2 == 1)){
             xPos = (CLOCK_WIDTH - 1) - xPos;
           }
           if (i >= arrSize)
@@ -337,19 +329,14 @@ void IndeciesFromMatrix(int* arr, int arrSize, int xStart, int xEnd, int yStart,
 }
 
 int IndexFromCoordinates(int x, int y) {
-  int index;
-  if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_TOP_RIGHT) {
-    index += y * CLOCK_WIDTH;
-  } else if (CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
-    index += (CLOCK_HEIGHT - y) * CLOCK_WIDTH;
-  }
-  if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT || CLOCK_ORIGIN == ORIGIN_BOTTOM_LEFT) {
+  int index = y * CLOCK_WIDTH;
+  if (CLOCK_ORIGIN == ORIGIN_TOP_LEFT) {
     if (y%2 == 0) {
       index += x;
     } else {
       index += CLOCK_WIDTH - x - 1;
     }
-  } else if (CLOCK_ORIGIN == ORIGIN_TOP_RIGHT || CLOCK_ORIGIN == ORIGIN_BOTTOM_RIGHT) {
+  } else if (CLOCK_ORIGIN == ORIGIN_TOP_RIGHT) {
     if (y%2 == 0) {
       index += CLOCK_WIDTH - x - 1;
     } else {
@@ -690,7 +677,7 @@ void CornerWipe(unsigned long wait, int cornerWipeWidth, bool wipe) {
     for (int y = 0; y < CLOCK_HEIGHT; y++) {
       for (int x = 0; x < CLOCK_WIDTH; x++) {
         int ledPos = IndexFromCoordinates(x, y);
-        if (y == CLOCK_HEIGHT - 1) { // TODO: generalize this
+        if (y == CLOCK_HEIGHT - 1) {
           ledPos -= AndXMinutes_SIZE;
           if (ledPos < N_LEDS - AndXMinutes_SIZE) continue;
         }

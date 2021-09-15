@@ -93,19 +93,18 @@ int Oclock[Oclock_SIZE];
 const int AndXMinutes_SIZE = 4;
 int AndXMinutes[AndXMinutes_SIZE];
 
-const int NumberOfBirthdays = 3;
+const int NumberOfBirthdays = 2;
 int Birthdays[NumberOfBirthdays][4] = {
   {26, 1, 0, 0},
-  {24, 8, 0, 0},
-  {28, 1, 10, 14},
+  {24, 10, 0, 0},
 };
 bool ShowBirthdayMsg;
 
-const int NumberOfAnniversaries = 2;
+const int NumberOfAnniversaries = 4;
 int Anniversaries[][4] = {
   {26, 1, 20, 0},
   {30, 11, 0, 0},
-  // {27, 1, 1, 15},
+  {18, 9, 18, 0}, // TODO: remove
 };
 bool ShowAnniversaryMsg;
 
@@ -167,7 +166,7 @@ unsigned long countdownTimer;
 const int CornerWipeWidth = 3;
 const int CountdownFrom = 30; // max 60
 
-bool previousEnableState, currentEnableState;
+int previousEnableState, currentEnableState;
 
 void setup() {
   Serial.begin(9600);
@@ -223,7 +222,7 @@ void loop() {
       }
 
       if (StartCountdown(CountdownFrom)) {
-        TheaterChaseCountdown(DelayInterval, CountdownFrom, strip.Color(255, 255, 255), strip.Color(255, 0, 0)); // Wheel(currentWordsColor)
+        TheaterChaseCountdown(DelayInterval, CountdownFrom, strip.Color(255, 255, 255), strip.Color(255, 0, 0));
         CornerWipe(DelayInterval, CornerWipeWidth, false);
       }
       
@@ -359,8 +358,8 @@ void SetTime(bool force){
     pastWordsColor = currentWordsColor;
     pastBrightness = currentBrightness;
 
-    ShowBirthdayMsg = CheckEvent(Birthdays, NumberOfBirthdays, 0);
-    ShowAnniversaryMsg = CheckEvent(Anniversaries, NumberOfAnniversaries, 0);
+    ShowBirthdayMsg = CheckPastEvent(Birthdays, NumberOfBirthdays);
+    ShowAnniversaryMsg = CheckPastEvent(Anniversaries, NumberOfAnniversaries);
 
     strip.setBrightness(currentBrightness);
     
@@ -472,10 +471,7 @@ void GetBrightnessValue() {
   if (dimmerReadIndex >= numReadings)
     dimmerReadIndex = 0;
   
-  dimmerAverage = dimmerTotal / numReadings;
-  floatBrightnessValue = (dimmerAverage / 1023.0) * 255.0;
-  currentBrightness = 255 - (int)floatBrightnessValue;
-  currentBrightness = 100; // TODO: remove this once dimmer is connected
+  currentBrightness = map(dimmerTotal / numReadings, 0, 1023, 0, 255);
   
   if (currentBrightness < 1)
     currentBrightness = 1;
@@ -487,17 +483,13 @@ void GetBrightnessValue() {
 void GetColorValue() {
   colorTotal = colorTotal - colorReadings[colorReadIndex];
   colorReadings[colorReadIndex] = analogRead(COLOR);
-  // Serial.println(colorReadings[colorReadIndex]);
   colorTotal = colorTotal + colorReadings[colorReadIndex];
   
   colorReadIndex = colorReadIndex + 1;
   if (colorReadIndex >= numReadings)
     colorReadIndex = 0;
   
-  colorAverage = colorTotal / numReadings;
-  floatColorValue = (colorAverage / 1023.0) * 255.0;
-  currentWordsColor = 255 - (int)floatColorValue;
-  // Serial.println(currentWordsColor);
+  currentWordsColor = map(colorTotal / numReadings, 0, 1023, 0, 255);
   
   if (TooDifferent(currentWordsColor, pastWordsColor))
     stripUpdated = true;
@@ -505,7 +497,7 @@ void GetColorValue() {
 
 void UpdateTime() {
   DateTime now = rtc.now();
-  rtc.adjust(DateTime(now + TimeSpan(0, hourOffset, minuteOffset, -now.second())));
+  rtc.adjust(DateTime(now + TimeSpan(0, hourOffset, minuteOffset, -now.second()+1)));
   hourOffset = 0;
   minuteOffset = 0;
 }
@@ -555,13 +547,21 @@ void ClearStrip() {
   strip.clear();
 }
 
-bool CheckEvent(int dates[][4], int numDates, int minOffset) {
+bool CheckPastEvent(int dates[][4], int numDates) {
   DateTime now = rtc.now();
   for (int i = 0; i < numDates; i++) {
-    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour()) {
-      if ((minOffset == 0 && dates[i][3] <= now.minute()) || (minOffset > 0 && dates[i][3] - minOffset == now.minute() && dates[i][2] == now.hour())) {
-        return true;
-      }
+    if (dates[i][0] == now.day() && dates[i][1] == now.month() && dates[i][2] <= now.hour() && dates[i][3] <= now.minute()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool CheckFutureEvent(int dates[][4], int numDates) {
+  DateTime future = DateTime(rtc.now() + TimeSpan(0, 0, 1, 0));
+  for (int i = 0; i < numDates; i++) {
+    if (dates[i][0] == future.day() && dates[i][1] == future.month() && dates[i][2] == future.hour() && dates[i][3] == future.minute()) {
+      return true;
     }
   }
   return false;
@@ -569,7 +569,7 @@ bool CheckEvent(int dates[][4], int numDates, int minOffset) {
 
 bool StartCountdown(int counter) {
   DateTime now = rtc.now();
-  if (CheckEvent(Birthdays, NumberOfBirthdays, 1) || CheckEvent(Anniversaries, NumberOfAnniversaries, 1)) {
+  if (CheckFutureEvent(Birthdays, NumberOfBirthdays) || CheckFutureEvent(Anniversaries, NumberOfAnniversaries)) {
     if (now.second() == (60 - counter)) {
       return true;
     }
@@ -655,12 +655,6 @@ uint32_t Wheel(int wheelPos) {
     g = 255 - wheelPos * 3;
     b = 0;
   }
-  // Serial.print(r);
-  // Serial.print(", ");
-  // Serial.print(g);
-  // Serial.print(", ");
-  // Serial.print(b);
-  // Serial.println("");
   return strip.Color(r, g, b);
 }
 

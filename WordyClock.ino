@@ -100,11 +100,11 @@ int Birthdays[NumberOfBirthdays][4] = {
 };
 bool ShowBirthdayMsg;
 
-const int NumberOfAnniversaries = 4;
+const int NumberOfAnniversaries = 3;
 int Anniversaries[][4] = {
   {26, 1, 20, 0},
   {30, 11, 0, 0},
-  {18, 9, 18, 0}, // TODO: remove
+  {30, 8, 8, 0},
 };
 bool ShowAnniversaryMsg;
 
@@ -130,16 +130,12 @@ const int numReadings = 30;
 int dimmerReadings[numReadings];
 int dimmerReadIndex = 0;
 int dimmerTotal = 0;
-int dimmerAverage = 0;
-float floatBrightnessValue = 0.0;
 int pastBrightness = 0;
 int currentBrightness = 0;
 
 int colorReadings[numReadings];
 int colorReadIndex = 0;
 int colorTotal = 0;
-int colorAverage = 0;
-float floatColorValue = 0.0;
 int currentWordsColor = 0;
 int pastWordsColor = 0;
 
@@ -254,7 +250,18 @@ void StartUp() {
     delay(5);
   }
   
-  RainAnimation(30, 80, 11, 50, MatrixPrinter);
+  DateTime now = rtc.now();
+  int month = now.month();
+  int day = now.day();
+  if ((month == 9 && day >= 21) || month == 10 || month == 11 || (month == 12 && day < 21)) {
+    RainAnimation(30, 80, 11, 50, RainPrinter);
+  } else if ((month == 12 && day >= 21) || month == 1 || month == 2 || (month == 3 && day < 21)) {
+    RainAnimation(30, 80, 11, 50, SnowPrinter);
+  } else if ((month == 3 && day >= 21) || month == 4 || month == 5 || (month == 6 && day < 21)) {
+    RainAnimation(30, 80, 11, 50, MatrixPrinter);
+  } else if ((month == 6 && day >= 21) || month == 7 || month == 8 || (month == 9 && day < 21)) {
+    RainAnimation(30, 80, 11, 50, SunsetRainPrinter);
+  }
   CornerWipe(DelayInterval, 3, false);
 }
 
